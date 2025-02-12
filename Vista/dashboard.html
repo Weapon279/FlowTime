@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowTime Dashboard</title>
+    <link rel="stylesheet" href="../includes/css/dashboard.css">
+    <link rel="stylesheet" href="../includes/css/animacion.css">
+    <link rel="stylesheet" href="../includes/css/estilo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    <div class="dashboard-container">
+        <aside class="sidebar animate-slideInLeft">
+            <div class="sidebar-header">
+                <img src="img/logo.png" alt="FlowTime Logo" class="logo">
+                <h2>FlowTime</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="#"><i class="fas fa-tasks"></i> Tareas</a></li>
+                    <li><a href="#"><i class="far fa-calendar-alt"></i> Calendario</a></li>
+                    <li><a href="#"><i class="fas fa-chart-line"></i> Análisis</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-profile" id="userProfileDropdown">
+                    <img src="img/user-avatar.jpg" alt="User Avatar" class="avatar">
+                    <span>John Doe</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="user-dropdown" id="userDropdownMenu">
+                    <a href="#" id="changePasswordBtn"><i class="fas fa-key"></i> Cambiar Contraseña</a>
+                    <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+                    <a href="#" id="darkModeToggle"><i class="fas fa-moon"></i> Modo Oscuro</a>
+                </div>
+            </div>
+        </aside>
+        <main class="dashboard-main animate-fadeIn">
+            <header class="dashboard-header">
+                <h1>Bienvenido de vuelta, John</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary"><i class="fas fa-plus"></i> Nueva Tarea</button>
+                    <button class="btn btn-secondary"><i class="far fa-bell"></i></button>
+                </div>
+            </header>
+            <section class="dashboard-summary">
+                <h2>Resumen del Día</h2>
+                <div class="summary-cards">
+                    <div class="card animate-slideInBottom">
+                        <h3>Tareas Pendientes</h3>
+                        <p class="big-number">5</p>
+                    </div>
+                    <div class="card animate-slideInBottom" style="animation-delay: 0.1s;">
+                        <h3>Completadas Hoy</h3>
+                        <p class="big-number">3</p>
+                    </div>
+                    <div class="card animate-slideInBottom" style="animation-delay: 0.2s;">
+                        <h3>Tiempo Productivo</h3>
+                        <p class="big-number">4h 30m</p>
+                    </div>
+                </div>
+            </section>
+            <section class="dashboard-main-content">
+                <div class="tasks-calendar-container">
+                    <div class="tasks-list animate-slideInLeft">
+                        <h2>Tareas de Hoy</h2>
+                        <input type="text" id="taskSearch" placeholder="Buscar tareas...">
+                        <ul id="taskList">
+                            <!-- Las tareas se cargarán dinámicamente -->
+                        </ul>
+                    </div>
+                        <ul>
+                            <li>
+                                <input type="checkbox" id="task1">
+                                <label for="task1">Reunión de equipo</label>
+                                <span class="task-time">10:00 AM</span>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="task2">
+                                <label for="task2">Finalizar informe</label>
+                                <span class="task-time">2:00 PM</span>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="task3">
+                                <label for="task3">Llamada con cliente</label>
+                                <span class="task-time">4:30 PM</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="calendar animate-slideInRight">
+                        <h2>Calendario</h2>
+                        <div id="calendar-container">
+                            <!-- El calendario se generará con JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                <div class="ai-recommendations animate-slideInBottom">
+                    <h2>Recomendaciones de IA</h2>
+                    <div class="recommendation-card">
+                        <p>Basado en tu patrón de productividad, te sugerimos tomar un descanso de 15 minutos a las 3:00 PM.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="../includes/js/main.js"></script>
+    <script src="../includes/js/dashboard.js"></script>
+    <script src="../includes/js/async.js"></script>
+    <script></script>
+</body>
+</html>
