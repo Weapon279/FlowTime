@@ -105,3 +105,116 @@ function setupNewTaskButton() {
         alert('Funcionalidad para crear nueva tarea');
     });
 }
+
+// dashboard.js
+document.addEventListener('DOMContentLoaded', () => {
+    initializeCharts();
+    setupModal();
+    setupCalendar();
+});
+
+function initializeCharts() {
+    // Gráfica de Eficiencia
+    const efficiencyCtx = document.getElementById('efficiencyChart').getContext('2d');
+    new Chart(efficiencyCtx, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [85, 15],
+                backgroundColor: [
+                    'var(--color-green)',
+                    'var(--color-beige)'
+                ]
+            }]
+        },
+        options: {
+            cutout: '80%',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    // Gráfica de Productividad
+    const productivityCtx = document.getElementById('productivityChart').getContext('2d');
+    new Chart(productivityCtx, {
+        type: 'line',
+        data: {
+            labels: ['9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM'],
+            datasets: [{
+                label: 'Productividad',
+                data: [65, 75, 85, 70, 60, 80, 90, 85, 80],
+                borderColor: 'var(--color-green)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
+}
+
+function setupModal() {
+    const modal = document.getElementById('newTaskModal');
+    const newTaskBtn = document.getElementById('newTaskBtn');
+    const closeModal = document.querySelector('.close-modal');
+    const cancelBtn = document.getElementById('cancelTask');
+    const saveBtn = document.getElementById('saveTask');
+
+    newTaskBtn.addEventListener('click', () => {
+        modal.classList.add('active');
+    });
+
+    function closeModalHandler() {
+        modal.classList.remove('active');
+    }
+
+    closeModal.addEventListener('click', closeModalHandler);
+    cancelBtn.addEventListener('click', closeModalHandler);
+    
+    saveBtn.addEventListener('click', () => {
+        // Aquí iría la lógica para guardar la tarea
+        closeModalHandler();
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModalHandler();
+        }
+    });
+}
+
+function setupCalendar() {
+    const calendarGrid = document.getElementById('calendarGrid');
+    const hours = Array.from({length: 12}, (_, i) => `${i + 9}:00`);
+    
+    let calendarHTML = '<div class="calendar-hours">';
+    
+    hours.forEach(hour => {
+        calendarHTML += `
+            <div class="hour-slot">
+                <div class="hour-label">${hour}</div>
+                <div class="hour-content"></div>
+            </div>
+        `;
+    });
+    
+    calendarHTML += '</div>';
+    calendarGrid.innerHTML = calendarHTML;
+}

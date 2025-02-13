@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tareas</title>
+
+    <link rel="stylesheet" href="../includes/css/tareas.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-clock fa-2x" style="color: var(--primary);"></i>
+                <h1>TimeFlow</h1>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#" class="active"><i class="fas fa-tasks"></i> Tareas</a></li>
+                    <li><a href="#"><i class="fas fa-calendar"></i> Calendario</a></li>
+                    <li><a href="#"><i class="fas fa-chart-line"></i> Análisis</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h2>Tareas</h2>
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Buscar tareas...">
+                    <button id="searchBtn" class="btn">Buscar</button>
+                </div>
+            </header>
+
+            <div id="taskList" class="task-list">
+            </div>
+
+            <div id="loading" class="loading">Cargando tareas...</div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const taskList = document.getElementById('taskList');
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const loading = document.getElementById('loading');
+
+           
+            const tasks = [
+                { id: 1, title: "Completar informe", completed: false },
+                { id: 2, title: "Reunión con el equipo", completed: true },
+                { id: 3, title: "Revisar presupuesto", completed: false },
+                { id: 4, title: "Enviar propuesta al cliente", completed: false },
+                { id: 5, title: "Actualizar sitio web", completed: true }
+            ];
+
+          
+            function renderTasks(tasksToRender) {
+                taskList.innerHTML = '';
+                tasksToRender.forEach(task => {
+                    const taskElement = document.createElement('div');
+                    taskElement.classList.add('task-item');
+                    if (task.completed) {
+                        taskElement.classList.add('completed');
+                    }
+                    taskElement.innerHTML = `
+                        <span class="task-title">${task.title}</span>
+                        <div class="task-actions">
+                            <button onclick="toggleTask(${task.id})">
+                                <i class="fas ${task.completed ? 'fa-undo' : 'fa-check'}"></i>
+                            </button>
+                            <button onclick="deleteTask(${task.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    taskList.appendChild(taskElement);
+                });
+            }
+
+           
+            function loadTasks() {
+                loading.style.display = 'block';
+                taskList.style.display = 'none';
+
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    taskList.style.display = 'grid';
+                    renderTasks(tasks);
+                }, 1000);
+            }
+
+           
+            function searchTasks() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filteredTasks = tasks.filter(task => 
+                    task.title.toLowerCase().includes(searchTerm)
+                );
+                renderTasks(filteredTasks);
+            }
+
+            window.toggleTask = function(id) {
+                const task = tasks.find(t => t.id === id);
+                if (task) {
+                    task.completed = !task.completed;
+                    renderTasks(tasks);
+                }
+            }
+
+            window.deleteTask = function(id) {
+                const index = tasks.findIndex(t => t.id === id);
+                if (index !== -1) {
+                    tasks.splice(index, 1);
+                    renderTasks(tasks);
+                }
+            }
+
+            searchBtn.addEventListener('click', searchTasks);
+            searchInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    searchTasks();
+                }
+            });
+
+            loadTasks();
+        });
+    </script>
+</body>
+</html>
