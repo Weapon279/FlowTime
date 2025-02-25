@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis - Time Management Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../includes/css/dashboard.css">
+    <style>
+        :root {
+            --primary: #A3C9A8;
+            --primary-light: #BFD7EA;
+            --secondary: #F5B7A5;
+            --accent: #F4EAE0;
+            --background: #FFFFFF;
+            --surface: #F4EAE0;
+            --text: #333333;
+            --text-light: #6D8299;
+            --border: #BFD7EA;
+            --success: #A3C9A8;
+            --warning: #F5B7A5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--surface);
+            padding: 1.5rem;
+            border-right: 1px solid var(--border);
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--surface);
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container {
+            background-color: var(--surface);
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-container h3 {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .chart-wrapper {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .recommendations {
+            background-color: var(--surface);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: var(--background);
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .recommendation-item:hover {
+            transform: translateX(5px);
+        }
+
+        .recommendation-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background-color: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-value {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-clock fa-2x" style="color: var(--primary);"></i>
+                <h1>TimeFlow</h1>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="dashboard.html" class="fas fa-home"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="tareas.html"><i class="fas fa-tasks"></i> Tareas</a></li>
+                    <li><a href="calendario.html"><i class="fas fa-calendar"></i> Calendario</a></li>
+                    <li><a href="analisis.html"><i class="active"></i> Análisis</a></li>
+                    <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h2>Análisis de Productividad</h2>
+                <select id="timeRange" class="btn">
+                    <option value="day">Hoy</option>
+                    <option value="week">Esta semana</option>
+                    <option value="month">Este mes</option>
+                </select>
+            </header>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Tiempo Productivo</h3>
+                    <div class="value">6h 30m</div>
+                    <div class="progress-bar">
+                        <div class="progress-value" style="width: 75%;"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Tiempo Muerto</h3>
+                    <div class="value">2h 15m</div>
+                    <div class="progress-bar">
+                        <div class="progress-value" style="width: 25%;"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Índice de Procrastinación</h3>
+                    <div class="value">15%</div>
+                    <div class="progress-bar">
+                        <div class="progress-value" style="width: 15%;"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Eficiencia en Tareas</h3>
+                    <div class="value">85%</div>
+                    <div class="progress-bar">
+                        <div class="progress-value" style="width: 85%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>Distribución del Tiempo</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="timeDistributionChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3>Tendencia de Productividad</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="productivityTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendations">
+                <h3>Recomendaciones de Mejora</h3>
+                <div id="recommendationsList"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Datos de ejemplo para los gráficos
+        const timeDistributionData = {
+            labels: ['Trabajo Productivo', 'Reuniones', 'Descansos', 'Procrastinación', 'Tiempo Muerto'],
+            datasets: [{
+                data: [45, 20, 15, 10, 10],
+                backgroundColor: [
+                    'var(--primary)',
+                    'var(--primary-light)',
+                    'var(--secondary)',
+                    'var(--accent)',
+                    'var(--text-light)'
+                ]
+            }]
+        };
+
+        const productivityTrendData = {
+            labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+            datasets: [{
+                label: 'Productividad',
+                data: [75, 82, 68, 90, 85, 60, 70],
+                borderColor: 'var(--primary)',
+                tension: 0.4,
+                fill: false
+            }]
+        };
+
+        const timeDistributionChart = new Chart(
+            document.getElementById('timeDistributionChart'),
+            {
+                type: 'doughnut',
+                data: timeDistributionData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                boxWidth: 12,
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        );
+
+        const productivityTrendChart = new Chart(
+            document.getElementById('productivityTrendChart'),
+            {
+                type: 'line',
+                data: productivityTrendData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        );
+
+        // Función para generar recomendaciones basadas en el análisis
+        function generateRecommendations() {
+            const recommendations = [
+                {
+                    icon: 'fa-clock',
+                    title: 'Optimiza tus períodos de trabajo',
+                    description: 'Implementa la técnica Pomodoro: 25 minutos de trabajo enfocado seguidos de 5 minutos de descanso.'
+                },
+                {
+                    icon: 'fa-list-check',
+                    title: 'Priorización de tareas',
+                    description: 'Identifica las tareas más importantes al inicio del día y realízalas durante tus horas más productivas.'
+                },
+                {
+                    icon: 'fa-bell',
+                    title: 'Reduce las distracciones',
+                    description: 'Desactiva las notificaciones durante los períodos de trabajo enfocado y establece horarios específicos para revisar el correo.'
+                },
+                {
+                    icon: 'fa-chart-line',
+                    title: 'Mejora tu tiempo muerto',
+                    description: 'Convierte el tiempo muerto en productivo utilizando la regla de los 2 minutos para tareas pequeñas.'
+                }
+            ];
+
+            const recommendationsList = document.getElementById('recommendationsList');
+            recommendationsList.innerHTML = recommendations.map(rec => `
+                <div class="recommendation-item">
+                    <i class="fas ${rec.icon} recommendation-icon"></i>
+                    <div>
+                        <h4>${rec.title}</h4>
+                        <p>${rec.description}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Inicializar recomendaciones
+        generateRecommendations();
+
+        // Evento para cambiar el rango de tiempo
+        document.getElementById('timeRange').addEventListener('change', function(e) {
+            // Aquí se actualizarían los datos según el rango seleccionado
+            console.log('Rango seleccionado:', e.target.value);
+        });
+    </script>
+</body>
+</html>

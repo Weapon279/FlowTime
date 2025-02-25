@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Técnicas de Productividad - Time Management Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #A3C9A8;
+            --primary-light: #BFD7EA;
+            --secondary: #F5B7A5;
+            --accent: #F4EAE0;
+            --background: #FFFFFF;
+            --surface: #F4EAE0;
+            --text: #333333;
+            --text-light: #6D8299;
+            --border: #BFD7EA;
+            --success: #A3C9A8;
+            --warning: #F5B7A5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background-color: var(--surface);
+            padding: 1.5rem;
+            border-right: 1px solid var(--border);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .main-content {
+            padding: 2rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .questionnaire {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--surface);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question h3 {
+            margin-bottom: 1rem;
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--background);
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .option.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .option input[type="radio"] {
+            display: none;
+        }
+
+        .option label {
+            flex-grow: 1;
+            cursor: pointer;
+        }
+
+        .technique-info {
+            display: none;
+            margin-top: 2rem;
+            padding: 2rem;
+            background-color: var(--background);
+            border-radius: 1rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .technique-info.active {
+            display: block;
+        }
+
+        .timer-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .timer-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--background);
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            min-width: 300px;
+        }
+
+        .timer-display {
+            font-size: 4rem;
+            font-family: 'Poppins', sans-serif;
+            margin: 2rem 0;
+            color: var(--primary);
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: var(--primary);
+            color: var(--background);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: var(--border);
+            border-radius: 5px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .technique-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .technique-step {
+            background-color: var(--surface);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+
+        .technique-step i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .questionnaire {
+                padding: 1rem;
+            }
+        }
+    </style>
+    <style>
+        /* Agregar estos estilos específicos para las opciones */
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--background);
+            border: 2px solid var(--border);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+        
+        .option:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+        
+        .option label {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            cursor: pointer;
+            padding-left: 35px;
+            position: relative;
+        }
+        
+        .option label:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            background-color: var(--background);
+            transition: all 0.3s ease;
+        }
+        
+        .option input[type="radio"]:checked + label:before {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .option input[type="radio"]:checked + label:after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--background);
+        }
+        
+        .option.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        /* Agregar animación de selección */
+        @keyframes selectOption {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(0.95);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .option:active {
+            animation: selectOption 0.3s ease;
+        }
+        </style>
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-clock fa-2x" style="color: var(--primary);"></i>
+                <h1>TimeFlow</h1>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="tareas.html"><i class="fas fa-tasks"></i> Tareas</a></li>
+                    <li><a href="calendario.html"><i class="fas fa-calendar"></i> Calendario</a></li>
+                    <li><a href="gantt.html"><i class="fas fa-project-diagram"></i> Gantt</a></li>
+                    <li><a href="tecnicas.html" class="active"><i class="fas fa-brain"></i> Técnicas</a></li>
+                    <li><a href="analisis.html"><i class="fas fa-chart-line"></i> Análisis</a></li>
+                    <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="questionnaire" id="questionnaire">
+                <h2>Encuentra tu técnica ideal</h2>
+                <div class="question" style="animation-delay: 0.2s;">
+                    <h3>¿Cómo prefieres estructurar tu tiempo de trabajo?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="time_structure" id="fixed" value="fixed">
+                            <label for="fixed">Prefiero intervalos fijos y estructurados</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="time_structure" id="flexible" value="flexible">
+                            <label for="flexible">Prefiero flexibilidad según mi concentración</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" style="animation-delay: 0.4s;">
+                    <h3>¿Cómo manejas mejor las interrupciones?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="interruptions" id="scheduled" value="scheduled">
+                            <label for="scheduled">Prefiero descansos programados</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="interruptions" id="natural" value="natural">
+                            <label for="natural">Prefiero tomar descansos cuando los necesito</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" style="animation-delay: 0.6s;">
+                    <h3>¿Qué tipo de tareas realizas principalmente?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="task_type" id="focused" value="focused">
+                            <label for="focused">Tareas que requieren concentración intensa</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="task_type" id="creative" value="creative">
+                            <label for="creative">Tareas creativas o que fluyen naturalmente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="analyzeTechnique()">Encontrar mi técnica</button>
+            </div>
+
+            <div class="technique-info" id="techniqueInfo">
+                <!-- El contenido se llenará dinámicamente -->
+            </div>
+        </main>
+    </div>
+
+    <div class="timer-modal" id="timerModal">
+        <div class="timer-content">
+            <h2 id="timerTitle">Tiempo de trabajo</h2>
+            <div class="timer-display" id="timerDisplay">25:00</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="timer-controls">
+                <button class="btn" id="startTimer">Iniciar</button>
+                <button class="btn btn-secondary" id="pauseTimer">Pausar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const techniques = {
+            pomodoro: {
+                name: "Técnica Pomodoro",
+                description: "Divide tu tiempo en intervalos de 25 minutos de trabajo intenso, seguidos de 5 minutos de descanso.",
+                workTime: 25,
+                breakTime: 5,
+                longBreakTime: 15,
+                steps: [
+                    { icon: "fas fa-list", text: "Decide qué tareas vas a realizar" },
+                    { icon: "fas fa-mobile-alt", text: "Elimina distracciones" },
+                    { icon: "fas fa-clock", text: "Trabaja 25 minutos" },
+                    { icon: "fas fa-coffee", text: "Descansa 5 minutos" },
+                    { icon: "fas fa-redo", text: "Repite 4 veces" },
+                    { icon: "fas fa-hourglass-end", text: "Toma un descanso largo" }
+                ]
+            },
+            flowtime: {
+                name: "Técnica Flowtime",
+                description: "Trabaja según tu ritmo natural hasta que sientas que necesitas un descanso.",
+                steps: [
+                    { icon: "fas fa-tasks", text: "Selecciona una tarea específica" },
+                    { icon: "fas fa-play", text: "Comienza a trabajar" },
+                    { icon: "fas fa-stopwatch", text: "Registra tu tiempo" },
+                    { icon: "fas fa-pause", text: "Descansa cuando lo necesites" },
+                    { icon: "fas fa-coffee", text: "Toma un descanso proporcional" },
+                    { icon: "fas fa-sync", text: "Repite el ciclo" }
+                ]
+            }
+        };
+
+        let currentTechnique = null;
+        let timer = null;
+        let timeLeft = 0;
+        let totalTime = 0;
+        let isBreak = false;
+
+        function analyzeTechnique() {
+            const timeStructure = document.querySelector('input[name="time_structure"]:checked')?.value;
+            const interruptions = document.querySelector('input[name="interruptions"]:checked')?.value;
+            const taskType = document.querySelector('input[name="task_type"]:checked')?.value;
+
+            if (!timeStructure || !interruptions || !taskType) {
+                alert("Por favor, responde todas las preguntas");
+                return;
+            }
+
+            // Lógica simple de recomendación
+            if ((timeStructure === 'fixed' && interruptions === 'scheduled') || 
+                (taskType === 'focused' && interruptions === 'scheduled')) {
+                showTechniqueInfo('pomodoro');
+            } else {
+                showTechniqueInfo('flowtime');
+            }
+        }
+
+        function showTechniqueInfo(technique) {
+            currentTechnique = techniques[technique];
+            const techniqueInfo = document.getElementById('techniqueInfo');
+            
+            let stepsHTML = '<div class="technique-steps">';
+            currentTechnique.steps.forEach(step => {
+                stepsHTML += `
+                    <div class="technique-step">
+                        <i class="${step.icon}"></i>
+                        <p>${step.text}</p>
+                    </div>
+                `;
+            });
+            stepsHTML += '</div>';
+
+            techniqueInfo.innerHTML = `
+                <h2>${currentTechnique.name}</h2>
+                <p>${currentTechnique.description}</p>
+                ${stepsHTML}
+                <button class="btn" onclick="startTechnique()">Comenzar</button>
+            `;
+            techniqueInfo.classList.add('active');
+        }
+
+        function startTechnique() {
+            const timerModal = document.getElementById('timerModal');
+            timerModal.style.display = 'block';
+            
+            if (currentTechnique.name === "Técnica Pomodoro") {
+                startPomodoro();
+            } else {
+                startFlowtime();
+            }
+        }
+
+        function startPomodoro() {
+            timeLeft = currentTechnique.workTime * 60;
+            totalTime = timeLeft;
+            updateTimer();
+            document.getElementById('timerTitle').textContent = "Tiempo de trabajo";
+        }
+
+        function startFlowtime() {
+            timeLeft = 0;
+            totalTime = 0;
+            updateTimer(true);
+            document.getElementById('timerTitle').textContent = "Tiempo de flujo";
+        }
+
+        function updateTimer(counting_up = false) {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            
+            const progress = counting_up ? 
+                (timeLeft / (60 * 60)) * 100 : // Máximo 1 hora para Flowtime
+                ((totalTime - timeLeft) / totalTime) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+        }
+
+        document.getElementById('startTimer').addEventListener('click', function() {
+            if (!timer) {
+                timer = setInterval(() => {
+                    if (currentTechnique.name === "Técnica Pomodoro") {
+                        timeLeft--;
+                        if (timeLeft <= 0) {
+                            clearInterval(timer);
+                            timer = null;
+                            if (!isBreak) {
+                                isBreak = true;
+                                timeLeft = currentTechnique.breakTime * 60;
+                                totalTime = timeLeft;
+                                document.getElementById('timerTitle').textContent = "Tiempo de descanso";
+                                showNotification("¡Tiempo de descanso!");
+                            } else {
+                                completeSession();
+                            }
+                        }
+                    } else {
+                        timeLeft++;
+                        if (timeLeft >= 60 * 60) { // Límite de 1 hora para Flowtime
+                            clearInterval(timer);
+                            timer = null;
+                            showNotification("Has estado trabajando por 1 hora. ¿Necesitas un descanso?");
+                        }
+                    }
+                    updateTimer(currentTechnique.name === "Técnica Flowtime");
+                }, 1000);
+            }
+        });
+
+        document.getElementById('pauseTimer').addEventListener('click', function() {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+        });
+
+        function completeSession() {
+            const shouldContinue = confirm("¿Has completado la tarea?");
+            if (shouldContinue) {
+                isBreak = false;
+                document.getElementById('timerModal').style.display = 'none';
+                showNotification("¡Excelente trabajo! Toma un descanso largo antes de continuar.");
+            } else {
+                startTechnique();
+            }
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.padding = '1rem';
+            notification.style.backgroundColor = 'var(--primary)';
+            notification.style.color = 'var(--background)';
+            notification.style.borderRadius = '0.5rem';
+            notification.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            notification.style.animation = 'slideUp 0.3s ease-out';
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideUp 0.3s ease-out reverse';
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        // Cerrar el modal de temporizador al hacer clic fuera
+        document.getElementById('timerModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                if (confirm("¿Estás seguro de que quieres cancelar la sesión?")) {
+                    this.style.display = 'none';
+                    if (timer) {
+                        clearInterval(timer);
+                        timer = null;
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        // Agregar este código JavaScript después del script existente
+        document.addEventListener('DOMContentLoaded', function() {
+            // Manejar la selección de opciones
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach(option => {
+                const radio = option.querySelector('input[type="radio"]');
+                const label = option.querySelector('label');
+        
+                // Manejar clic en la opción completa
+                option.addEventListener('click', () => {
+                    radio.checked = true;
+                    updateSelectedState();
+                });
+        
+                // Manejar clic en el label
+                label.addEventListener('click', (e) => {
+                    e.preventDefault(); // Prevenir comportamiento predeterminado
+                    radio.checked = true;
+                    updateSelectedState();
+                });
+        
+                // Manejar cambio en el radio button
+                radio.addEventListener('change', () => {
+                    updateSelectedState();
+                });
+            });
+        
+            // Función para actualizar el estado visual de selección
+            function updateSelectedState() {
+                options.forEach(opt => {
+                    const radio = opt.querySelector('input[type="radio"]');
+                    if (radio.checked) {
+                        opt.classList.add('selected');
+                    } else {
+                        opt.classList.remove('selected');
+                    }
+                });
+            }
+        
+            // Mejorar la función analyzeTechnique para mostrar mensaje más claro
+            window.analyzeTechnique = function() {
+                const timeStructure = document.querySelector('input[name="time_structure"]:checked')?.value;
+                const interruptions = document.querySelector('input[name="interruptions"]:checked')?.value;
+                const taskType = document.querySelector('input[name="task_type"]:checked')?.value;
+        
+                if (!timeStructure || !interruptions || !taskType) {
+                    // Crear una notificación más amigable
+                    const notification = document.createElement('div');
+                    notification.style.position = 'fixed';
+                    notification.style.top = '20px';
+                    notification.style.right = '20px';
+                    notification.style.padding = '1rem';
+                    notification.style.backgroundColor = 'var(--warning)';
+                    notification.style.color = 'var(--background)';
+                    notification.style.borderRadius = '0.5rem';
+                    notification.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+                    notification.style.zIndex = '1000';
+                    notification.style.animation = 'slideIn 0.3s ease-out';
+                    notification.textContent = 'Por favor, responde todas las preguntas para continuar';
+        
+                    document.body.appendChild(notification);
+        
+                    setTimeout(() => {
+                        notification.style.animation = 'slideIn 0.3s ease-out reverse';
+                        setTimeout(() => document.body.removeChild(notification), 300);
+                    }, 3000);
+        
+                    // Resaltar visualmente las preguntas sin responder
+                    document.querySelectorAll('.question').forEach(question => {
+                        const hasAnswer = question.querySelector('input[type="radio"]:checked');
+                        if (!hasAnswer) {
+                            question.style.animation = 'shake 0.5s ease-in-out';
+                            setTimeout(() => {
+                                question.style.animation = '';
+                            }, 500);
+                        }
+                    });
+        
+                    return;
+                }
+        
+                // Continuar con la lógica existente...
+                if ((timeStructure === 'fixed' && interruptions === 'scheduled') || 
+                    (taskType === 'focused' && interruptions === 'scheduled')) {
+                    showTechniqueInfo('pomodoro');
+                } else {
+                    showTechniqueInfo('flowtime');
+                }
+            };
+        
+            // Agregar animación de shake para preguntas sin responder
+            const styleSheet = document.createElement('style');
+            styleSheet.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    25% { transform: translateX(-10px); }
+                    75% { transform: translateX(10px); }
+                }
+            `;
+            document.head.appendChild(styleSheet);
+        });
+        </script>
+</body>
+</html>

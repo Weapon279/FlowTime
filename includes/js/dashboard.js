@@ -218,3 +218,107 @@ function setupCalendar() {
     calendarHTML += '</div>';
     calendarGrid.innerHTML = calendarHTML;
 }
+
+<>
+document.addEventListener('DOMContentLoaded', function() {
+    // Modal functionality
+    const modal = document.getElementById('taskModal');
+    const newTaskBtn = document.getElementById('newTaskBtn');
+    const closeBtn = document.querySelector('.close-btn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    
+    ```javascript
+    const cancelBtn = document.getElementById('cancelBtn');
+    const saveBtn = document.getElementById('saveBtn');
+
+    // Show modal
+    newTaskBtn.addEventListener('click', () => {
+        modal.classList.add('active');
+    });
+
+    // Hide modal
+    const hideModal = () => {
+        modal.classList.remove('active');
+    };
+
+    closeBtn.addEventListener('click', hideModal);
+    cancelBtn.addEventListener('click', hideModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) hideModal();
+    });
+
+    // Charts
+    const efficiencyChart = new Chart(document.getElementById('efficiencyChart'), {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [85, 15],
+                backgroundColor: [
+                    'var(--primary)',
+                    'var(--border)'
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            cutout: '80%',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    const productivityChart = new Chart(document.getElementById('productivityChart'), {
+        type: 'line',
+        data: {
+            labels: ['9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM'],
+            datasets: [{
+                label: 'Productividad',
+                data: [65, 70, 85, 80, 75, 90, 85, 80, 88],
+                borderColor: 'var(--primary)',
+                tension: 0.4,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: {
+                        display: false
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    });
+
+    // Form submission
+    const taskForm = document.getElementById('taskForm');
+    saveBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (taskForm.checkValidity()) {
+            // Here you would typically send the data to your backend
+            hideModal();
+            taskForm.reset();
+        } else {
+            taskForm.reportValidity();
+        }
+    });
+});
