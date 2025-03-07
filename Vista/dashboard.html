@@ -3,24 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlowTime Dashboard</title>
+    <title>Dashboard - TimeFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="../includes/css/dashboard.css">
+    <style>
+        :root {
+            --primary: #A3C9A8;
+            --primary-light: #BFD7EA;
+            --secondary: #F5B7A5;
+            --accent: #F4EAE0;
+            --background: #FFFFFF;
+            --surface: #F4EAE0;
+            --text: #333333;
+            --text-light: #6D8299;
+            --border: #BFD7EA;
+            --success: #A3C9A8;
+            --warning: #F5B7A5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background-color: var(--surface);
+            padding: 1.5rem;
+            border-right: 1px solid var(--border);
+        }
+
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .chart-container {
+            margin-bottom: 2rem;
+        }
+
+        .kpi-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background-color: var(--surface);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard">
         <aside class="sidebar">
             <div class="logo">
                 <i class="fas fa-clock fa-2x" style="color: var(--primary);"></i>
-                <h1>FlowTime</h1>
+                <h1>TimeFlow</h1>
             </div>
             <nav>
                 <ul class="nav-links">
                     <li><a href="dashboard.html" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
                     <li><a href="tareas.html"><i class="fas fa-tasks"></i> Tareas</a></li>
                     <li><a href="calendario.html"><i class="fas fa-calendar"></i> Calendario</a></li>
+                    <li><a href="gantt.html"><i class="fas fa-project-diagram"></i> Gantt</a></li>
+                    <li><a href="tecnicas.html"><i class="fas fa-brain"></i> Técnicas</a></li>
+                    <li><a href="proyectos.html"><i class="fas fa-folder-open"></i> Proyectos</a></li>
+                    <li><a href="priorizacion-tareas.html"><i class="fas fa-sort-amount-up"></i> Priorización</a></li>
                     <li><a href="analisis.html"><i class="fas fa-chart-line"></i> Análisis</a></li>
                     <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
                 </ul>
@@ -28,206 +128,97 @@
         </aside>
 
         <main class="main-content">
-            <header class="header">
-                <h2>Dashboard</h2>
- 
-            </header>
-
-            <div class="dashboard-grid">
-                <div class="card">
-                    <h3>Eficiencia Diaria</h3>
-                    <div class="chart-container">
-                        <canvas id="efficiencyChart"></canvas>
-                    </div>
+            <h1 class="slide-in">Dashboard</h1>
+            
+            <div class="kpi-container slide-in">
+                <div class="kpi-card">
+                    <h3>Tareas Completadas</h3>
+                    <div class="kpi-value" id="completedTasks">0</div>
                 </div>
-                <div class="card">
+                <div class="kpi-card">
+                    <h3>Tareas Pendientes</h3>
+                    <div class="kpi-value" id="pendingTasks">0</div>
+                </div>
+                <div class="kpi-card">
                     <h3>Productividad</h3>
-                    <div class="chart-container">
-                        <canvas id="productivityChart"></canvas>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3>KPIs</h3>
-                    <div class="progress-container">
-                        <div class="progress-label">
-                            <span>Tareas Completadas</span>
-                            <span>75%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress" style="width: 75%"></div>
-                        </div>
-                    </div>
-                    <div class="progress-container">
-                        <div class="progress-label">
-                            <span>Tiempo Enfocado</span>
-                            <span>80%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress" style="width: 80%"></div>
-                        </div>
-                    </div>
+                    <div class="kpi-value" id="productivity">0%</div>
                 </div>
             </div>
 
-            <div class="kpi-grid">
-                <div class="kpi-card">
-                    <h4>Tareas Completadas</h4>
-                    <div class="kpi-value">12</div>
-                    <p>de 15 tareas</p>
-                </div>
-                <div class="kpi-card">
-                    <h4>Tiempo Productivo</h4>
-                    <div class="kpi-value">6.5h</div>
-                    <p>de 8 horas</p>
-                </div>
-                <div class="kpi-card">
-                    <h4>Eficiencia</h4>
-                    <div class="kpi-value">85%</div>
-                    <p>promedio diario</p>
-                </div>
+            <div class="chart-container slide-in">
+                <div id="taskProgressChart"></div>
+            </div>
+
+            <div class="chart-container slide-in">
+                <div id="taskDistributionChart"></div>
             </div>
         </main>
     </div>
 
-    <!-- Modal -->
-    <div class="modal" id="taskModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Nueva Tarea</h3>
-                <button class="close-btn"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="modal-body">
-                <form id="taskForm">
-                    <div class="form-group">
-                        <label for="taskTitle">Título</label>
-                        <input type="text" id="taskTitle" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="taskDescription">Descripción</label>
-                        <textarea id="taskDescription" rows="3"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="taskDate">Fecha</label>
-                        <input type="date" id="taskDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="taskPriority">Prioridad</label>
-                        <select id="taskPriority">
-                            <option value="low">Baja</option>
-                            <option value="medium">Media</option>
-                            <option value="high">Alta</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" id="cancelBtn">Cancelar</button>
-                <button class="btn btn-primary" id="saveBtn">Guardar</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Modal functionality
-            const modal = document.getElementById('taskModal');
-            const newTaskBtn = document.getElementById('newTaskBtn');
-            const closeBtn = document.querySelector('.close-btn');
-            const cancelBtn = document.getElementById('cancelBtn');
-            ```javascript
-            const cancelBtn = document.getElementById('cancelBtn');
-            const saveBtn = document.getElementById('saveBtn');
+        // Datos de ejemplo (en una aplicación real, estos datos vendrían de una base de datos)
+        const taskData = {
+            completed: 15,
+            pending: 8,
+            categories: {
+                'Trabajo': 10,
+                'Personal': 5,
+                'Estudio': 4,
+                'Salud': 4
+            },
+            progress: [
+                {name: 'Lunes', value: 4},
+                {name: 'Martes', value: 3},
+                {name: 'Miércoles', value: 5},
+                {name: 'Jueves', value: 2},
+                {name: 'Viernes', value: 1},
+                {name: 'Sábado', value: 0},
+                {name: 'Domingo', value: 0}
+            ]
+        };
 
-            // Show modal
-            newTaskBtn.addEventListener('click', () => {
-                modal.classList.add('active');
-            });
+        // Actualizar KPIs
+        document.getElementById('completedTasks').textContent = taskData.completed;
+        document.getElementById('pendingTasks').textContent = taskData.pending;
+        document.getElementById('productivity').textContent = 
+            Math.round((taskData.completed / (taskData.completed + taskData.pending)) * 100) + '%';
 
-            // Hide modal
-            const hideModal = () => {
-                modal.classList.remove('active');
-            };
-
-            closeBtn.addEventListener('click', hideModal);
-            cancelBtn.addEventListener('click', hideModal);
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) hideModal();
-            });
-
-            // Charts
-            const efficiencyChart = new Chart(document.getElementById('efficiencyChart'), {
-                type: 'doughnut',
-                data: {
-                    datasets: [{
-                        data: [85, 15],
-                        backgroundColor: [
-                            'var(--primary)',
-                            'var(--border)'
-                        ],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    cutout: '80%',
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
+        // Gráfico de progreso de tareas
+        Highcharts.chart('taskProgressChart', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Progreso de Tareas por Día'
+            },
+            xAxis: {
+                categories: taskData.progress.map(day => day.name)
+            },
+            yAxis: {
+                title: {
+                    text: 'Tareas Completadas'
                 }
-            });
+            },
+            series: [{
+                name: 'Tareas Completadas',
+                data: taskData.progress.map(day => day.value),
+                color: '#A3C9A8'
+            }]
+        });
 
-            const productivityChart = new Chart(document.getElementById('productivityChart'), {
-                type: 'line',
-                data: {
-                    labels: ['9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM'],
-                    datasets: [{
-                        label: 'Productividad',
-                        data: [65, 70, 85, 80, 75, 90, 85, 80, 88],
-                        borderColor: 'var(--primary)',
-                        tension: 0.4,
-                        fill: false
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100,
-                            grid: {
-                                display: false
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Form submission
-            const taskForm = document.getElementById('taskForm');
-            saveBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (taskForm.checkValidity()) {
-                    // Here you would typically send the data to your backend
-                    hideModal();
-                    taskForm.reset();
-                } else {
-                    taskForm.reportValidity();
-                }
-            });
+        // Gráfico de distribución de tareas
+        Highcharts.chart('taskDistributionChart', {
+            chart: {
+                type: 'pie'
+            },
+            title: {
+                text: 'Distribución de Tareas por Categoría'
+            },
+            series: [{
+                name: 'Tareas',
+                data: Object.entries(taskData.categories).map(([name, value]) => ({name, y: value})),
+                colors: ['#A3C9A8', '#BFD7EA', '#F5B7A5', '#F4EAE0']
+            }]
         });
     </script>
 </body>

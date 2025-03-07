@@ -609,8 +609,8 @@
                     Basándote en esta información, proporciona una recomendación concisa para mejorar la productividad y reducir el estrés laboral. Sugiere también si se debería reorganizar el calendario y cómo hacerlo para lograr un mejor equilibrio entre disciplina y ocio.`;
 
                 try {
-                    const API_KEY = 'AIzaSyAgFkSAW4NcORQcoe1sushXN2oZAxOFF3k'; // Reemplaza con tu clave de API real
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`, {
+                    const apiKey = 'AIzaSyAgFkSAW4NcORQcoe1sushXN2oZAxOFF3k'; // Reemplaza con tu clave de API real
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
