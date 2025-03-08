@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análisis - Time Management Dashboard</title>
+    <title>Análisis - TimeFlow</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Highcharts Library -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+    
     <link rel="stylesheet" href="../includes/css/dashboard.css">
     <style>
         :root {
@@ -24,6 +29,8 @@
             --border: #BFD7EA;
             --success: #A3C9A8;
             --warning: #F5B7A5;
+            --danger: #FF6B6B;
+            --info: #4ECDC4;
         }
 
         * {
@@ -62,6 +69,12 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
         }
 
         .stats-grid {
@@ -107,7 +120,7 @@
             border-radius: 1rem;
             padding: 1rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            height: 300px;
+            min-height: 300px;
             display: flex;
             flex-direction: column;
         }
@@ -121,6 +134,7 @@
         .chart-wrapper {
             flex-grow: 1;
             position: relative;
+            min-height: 250px;
         }
 
         .recommendations {
@@ -165,6 +179,158 @@
             transition: width 0.3s ease;
         }
 
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 0.5rem 0.5rem 0 0;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background-color: var(--primary-light);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .goal-card {
+            background-color: var(--surface);
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .goal-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .goal-card h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .goal-card .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .technique-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .technique-card {
+            background-color: var(--surface);
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .technique-card h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .technique-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .technique-stat {
+            text-align: center;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background-color: var(--background);
+        }
+
+        .technique-stat .value {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .technique-stat .label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .completed {
+            color: var(--success);
+        }
+
+        .partial {
+            color: var(--warning);
+        }
+
+        .not-started {
+            color: var(--danger);
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: var(--primary);
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        select.btn {
+            appearance: none;
+            padding-right: 2rem;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white' width='18px' height='18px'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+        }
+
         @media (max-width: 768px) {
             .dashboard {
                 flex-direction: column;
@@ -184,8 +350,19 @@
                 grid-template-columns: 1fr;
             }
 
-            .chart-container {
-                height: 250px;
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .header-controls {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
             }
         }
 
@@ -194,10 +371,8 @@
                 grid-template-columns: 1fr;
             }
 
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
+            .technique-stats-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -207,14 +382,18 @@
         <aside class="sidebar">
             <div class="logo">
                 <i class="fas fa-clock fa-2x" style="color: var(--primary);"></i>
-                <h1>FlowTime</h1>
+                <h1>TimeFlow</h1>
             </div>
             <nav>
                 <ul class="nav-links">
-                    <li><a href="dashboard.html" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
                     <li><a href="tareas.html"><i class="fas fa-tasks"></i> Tareas</a></li>
                     <li><a href="calendario.html"><i class="fas fa-calendar"></i> Calendario</a></li>
-                    <li><a href="analisis.html"><i class="fas fa-chart-line"></i> Análisis</a></li>
+                    <li><a href="gantt.html"><i class="fas fa-project-diagram"></i> Gantt</a></li>
+                    <li><a href="tecnicas.html"><i class="fas fa-brain"></i> Técnicas</a></li>
+                    <li><a href="proyectos.html"><i class="fas fa-folder-open"></i> Proyectos</a></li>
+                    <li><a href="priorizacion-tareas.html"><i class="fas fa-sort-amount-up"></i> Priorización</a></li>
+                    <li><a href="analisis.html" class="active"><i class="fas fa-chart-line"></i> Análisis</a></li>
                     <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
                 </ul>
             </nav>
@@ -222,157 +401,699 @@
         <main class="main-content">
             <header class="header">
                 <h2>Análisis de Productividad</h2>
-                <select id="timeRange" class="btn">
-                    <option value="day">Hoy</option>
-                    <option value="week">Esta semana</option>
-                    <option value="month">Este mes</option>
-                </select>
+                <div class="header-controls">
+                    <select id="timeRange" class="btn">
+                        <option value="day">Hoy</option>
+                        <option value="week">Esta semana</option>
+                        <option value="month" selected>Este mes</option>
+                        <option value="quarter">Este trimestre</option>
+                        <option value="year">Este año</option>
+                    </select>
+                    <button id="exportDataBtn" class="btn">
+                        <i class="fas fa-download"></i> Exportar datos
+                    </button>
+                </div>
             </header>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3>Tiempo Productivo</h3>
-                    <div class="value">6h 30m</div>
-                    <div class="progress-bar">
-                        <div class="progress-value" style="width: 75%;"></div>
+            <div class="tabs">
+                <div class="tab active" data-tab="general">General</div>
+                <div class="tab" data-tab="goals">Objetivos y Metas</div>
+                <div class="tab" data-tab="techniques">Técnicas de Productividad</div>
+            </div>
+
+            <!-- Pestaña General -->
+            <div id="general-tab" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Tiempo Productivo</h3>
+                        <div class="value">6h 30m</div>
+                        <div class="progress-bar">
+                            <div class="progress-value" style="width: 75%;"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Tiempo Muerto</h3>
+                        <div class="value">2h 15m</div>
+                        <div class="progress-bar">
+                            <div class="progress-value" style="width: 25%;"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Índice de Procrastinación</h3>
+                        <div class="value">15%</div>
+                        <div class="progress-bar">
+                            <div class="progress-value" style="width: 15%;"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Eficiencia en Tareas</h3>
+                        <div class="value">85%</div>
+                        <div class="progress-bar">
+                            <div class="progress-value" style="width: 85%;"></div>
+                        </div>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <h3>Tiempo Muerto</h3>
-                    <div class="value">2h 15m</div>
-                    <div class="progress-bar">
-                        <div class="progress-value" style="width: 25%;"></div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Distribución del Tiempo</h3>
+                        <div id="timeDistributionChart" class="chart-wrapper"></div>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Tendencia de Productividad</h3>
+                        <div id="productivityTrendChart" class="chart-wrapper"></div>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <h3>Índice de Procrastinación</h3>
-                    <div class="value">15%</div>
-                    <div class="progress-bar">
-                        <div class="progress-value" style="width: 15%;"></div>
-                    </div>
+
+                <div class="chart-container">
+                    <h3>Horas Productivas por Día de la Semana</h3>
+                    <div id="productiveHoursChart" class="chart-wrapper"></div>
                 </div>
-                <div class="stat-card">
-                    <h3>Eficiencia en Tareas</h3>
-                    <div class="value">85%</div>
-                    <div class="progress-bar">
-                        <div class="progress-value" style="width: 85%;"></div>
-                    </div>
+
+                <div class="recommendations">
+                    <h3>Recomendaciones de Mejora</h3>
+                    <div id="recommendationsList"></div>
                 </div>
             </div>
 
-            <div class="charts-grid">
+            <!-- Pestaña de Objetivos y Metas -->
+            <div id="goals-tab" class="tab-content">
                 <div class="chart-container">
-                    <h3>Distribución del Tiempo</h3>
-                    <div class="chart-wrapper">
-                        <canvas id="timeDistributionChart"></canvas>
+                    <h3>Progreso de Objetivos Mensuales</h3>
+                    <div id="monthlyGoalsChart" class="chart-wrapper"></div>
+                </div>
+
+                <h3>Objetivos del Mes</h3>
+                <div class="goals-grid" id="monthlyGoalsList">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Tendencia de Cumplimiento de Objetivos</h3>
+                        <div id="goalsCompletionTrendChart" class="chart-wrapper"></div>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Distribución de Objetivos por Categoría</h3>
+                        <div id="goalsCategoryChart" class="chart-wrapper"></div>
                     </div>
                 </div>
-                <div class="chart-container">
-                    <h3>Tendencia de Productividad</h3>
-                    <div class="chart-wrapper">
-                        <canvas id="productivityTrendChart"></canvas>
-                    </div>
+
+                <div class="recommendations">
+                    <h3>Recomendaciones para Mejorar el Cumplimiento de Objetivos</h3>
+                    <div id="goalsRecommendationsList"></div>
                 </div>
             </div>
 
-            <div class="recommendations">
-                <h3>Recomendaciones de Mejora</h3>
-                <div id="recommendationsList"></div>
+            <!-- Pestaña de Técnicas de Productividad -->
+            <div id="techniques-tab" class="tab-content">
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Efectividad de Técnicas</h3>
+                        <div id="techniquesEffectivenessChart" class="chart-wrapper"></div>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Tiempo Dedicado por Técnica</h3>
+                        <div id="techniqueTimeChart" class="chart-wrapper"></div>
+                    </div>
+                </div>
+
+                <h3>Estadísticas por Técnica</h3>
+                <div class="technique-stats" id="techniqueStatsList">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+
+                <div class="chart-container">
+                    <h3>Tasa de Finalización de Tareas por Técnica</h3>
+                    <div id="techniqueCompletionRateChart" class="chart-wrapper"></div>
+                </div>
+
+                <div class="recommendations">
+                    <h3>Recomendaciones para Optimizar el Uso de Técnicas</h3>
+                    <div id="techniquesRecommendationsList"></div>
+                </div>
             </div>
         </main>
     </div>
 
     <script>
-        // Datos de ejemplo para los gráficos
-        const timeDistributionData = {
-            labels: ['Trabajo Productivo', 'Reuniones', 'Descansos', 'Procrastinación', 'Tiempo Muerto'],
-            datasets: [{
-                data: [45, 20, 15, 10, 10],
-                backgroundColor: [
-                    'var(--primary)',
-                    'var(--primary-light)',
-                    'var(--secondary)',
-                    'var(--accent)',
-                    'var(--text-light)'
-                ]
-            }]
+        // Datos de ejemplo
+        const productivityData = {
+            timeDistribution: [
+                { name: 'Trabajo Productivo', y: 45, color: '#A3C9A8' },
+                { name: 'Reuniones', y: 20, color: '#BFD7EA' },
+                { name: 'Descansos', y: 15, color: '#F5B7A5' },
+                { name: 'Procrastinación', y: 10, color: '#F4EAE0' },
+                { name: 'Tiempo Muerto', y: 10, color: '#6D8299' }
+            ],
+            productivityTrend: [
+                { day: 'Lun', value: 75 },
+                { day: 'Mar', value: 82 },
+                { day: 'Mié', value: 68 },
+                { day: 'Jue', value: 90 },
+                { day: 'Vie', value: 85 },
+                { day: 'Sáb', value: 60 },
+                { day: 'Dom', value: 70 }
+            ],
+            productiveHours: [
+                { name: 'Lunes', data: [3, 4, 5, 6, 7, 8] },
+                { name: 'Martes', data: [4, 5, 6, 7, 8, 9] },
+                { name: 'Miércoles', data: [2, 3, 4, 5, 6, 7] },
+                { name: 'Jueves', data: [5, 6, 7, 8, 9, 10] },
+                { name: 'Viernes', data: [4, 5, 6, 7, 8, 9] },
+                { name: 'Sábado', data: [2, 3, 4, 5, 6, 7] },
+                { name: 'Domingo', data: [1, 2, 3, 4, 5, 6] }
+            ]
         };
 
-        const productivityTrendData = {
-            labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
-            datasets: [{
-                label: 'Productividad',
-                data: [75, 82, 68, 90, 85, 60, 70],
-                borderColor: 'var(--primary)',
-                tension: 0.4,
-                fill: false
-            }]
+        const goalsData = {
+            monthlyGoals: [
+                { name: 'Completar proyecto web', progress: 75, category: 'Trabajo', dueDate: '2025-03-25' },
+                { name: 'Leer 3 libros', progress: 33, category: 'Personal', dueDate: '2025-03-31' },
+                { name: 'Ejercicio 3 veces por semana', progress: 80, category: 'Salud', dueDate: '2025-03-31' },
+                { name: 'Aprender nueva tecnología', progress: 60, category: 'Desarrollo', dueDate: '2025-03-28' },
+                { name: 'Organizar documentos', progress: 90, category: 'Administración', dueDate: '2025-03-15' },
+                { name: 'Planificar vacaciones', progress: 20, category: 'Personal', dueDate: '2025-04-10' }
+            ],
+            completionTrend: [
+                { month: 'Ene', value: 65 },
+                { month: 'Feb', value: 70 },
+                { month: 'Mar', value: 75 },
+                { month: 'Abr', value: 0 },
+                { month: 'May', value: 0 },
+                { month: 'Jun', value: 0 }
+            ],
+            categoryDistribution: [
+                { name: 'Trabajo', y: 35, color: '#4ECDC4' },
+                { name: 'Personal', y: 25, color: '#FF6B6B' },
+                { name: 'Salud', y: 15, color: '#A3C9A8' },
+                { name: 'Desarrollo', y: 15, color: '#BFD7EA' },
+                { name: 'Administración', y: 10, color: '#F5B7A5' }
+            ]
         };
 
-        const timeDistributionChart = new Chart(
-            document.getElementById('timeDistributionChart'),
-            {
-                type: 'doughnut',
-                data: timeDistributionData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                boxWidth: 12,
-                                font: {
-                                    size: 10
-                                }
-                            }
+        const techniquesData = {
+            effectiveness: [
+                { name: 'Pomodoro', y: 85, color: '#A3C9A8' },
+                { name: 'Flowtime', y: 75, color: '#4ECDC4' },
+                { name: 'Time Boxing', y: 90, color: '#FF6B6B' },
+                { name: 'GTD', y: 65, color: '#BFD7EA' },
+                { name: 'Kanban', y: 70, color: '#F5B7A5' }
+            ],
+            timeSpent: [
+                { name: 'Pomodoro', data: [12, 15, 18, 20, 22, 25, 28] },
+                { name: 'Flowtime', data: [8, 10, 12, 15, 18, 20, 22] },
+                { name: 'Time Boxing', data: [15, 18, 20, 22, 25, 28, 30] }
+            ],
+            techniques: [
+                {
+                    name: 'Pomodoro',
+                    icon: 'fa-clock',
+                    completed: 45,
+                    partial: 15,
+                    notStarted: 5,
+                    effectiveness: 85,
+                    totalTime: '25h 30m',
+                    avgSessionTime: '28m'
+                },
+                {
+                    name: 'Flowtime',
+                    icon: 'fa-hourglass-half',
+                    completed: 35,
+                    partial: 20,
+                    notStarted: 10,
+                    effectiveness: 75,
+                    totalTime: '18h 45m',
+                    avgSessionTime: '42m'
+                },
+                {
+                    name: 'Time Boxing',
+                    icon: 'fa-calendar-check',
+                    completed: 50,
+                    partial: 10,
+                    notStarted: 2,
+                    effectiveness: 90,
+                    totalTime: '30h 15m',
+                    avgSessionTime: '35m'
+                }
+            ],
+            completionRate: [
+                { name: 'Completadas', data: [45, 35, 50], color: '#A3C9A8' },
+                { name: 'Parciales', data: [15, 20, 10], color: '#F5B7A5' },
+                { name: 'No iniciadas', data: [5, 10, 2], color: '#FF6B6B' }
+            ]
+        };
+
+        // Inicializar gráficos con Highcharts
+        function initCharts() {
+            // Gráfico de distribución del tiempo
+            Highcharts.chart('timeDistributionChart', {
+                chart: {
+                    type: 'pie',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
                         }
                     }
+                },
+                series: [{
+                    name: 'Tiempo',
+                    colorByPoint: true,
+                    data: productivityData.timeDistribution
+                }],
+                credits: {
+                    enabled: false
                 }
-            }
-        );
+            });
 
-        const productivityTrendChart = new Chart(
-            document.getElementById('productivityTrendChart'),
-            {
-                type: 'line',
-                data: productivityTrendData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100,
-                            ticks: {
-                                font: {
-                                    size: 10
-                                }
-                            }
-                        },
-                        x: {
-                            ticks: {
-                                font: {
-                                    size: 10
-                                }
-                            }
-                        }
+            // Gráfico de tendencia de productividad
+            Highcharts.chart('productivityTrendChart', {
+                chart: {
+                    type: 'spline',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                xAxis: {
+                    categories: productivityData.productivityTrend.map(item => item.day)
+                },
+                yAxis: {
+                    title: {
+                        text: 'Productividad (%)'
                     },
-                    plugins: {
-                        legend: {
-                            labels: {
-                                font: {
-                                    size: 10
-                                }
-                            }
+                    min: 0,
+                    max: 100
+                },
+                tooltip: {
+                    valueSuffix: '%'
+                },
+                series: [{
+                    name: 'Productividad',
+                    data: productivityData.productivityTrend.map(item => item.value),
+                    color: '#A3C9A8'
+                }],
+                credits: {
+                    enabled: false
+                }
+            });
+
+            // Gráfico de horas productivas por día
+            Highcharts.chart('productiveHoursChart', {
+                chart: {
+                    type: 'column',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                xAxis: {
+                    categories: ['8-10 AM', '10-12 PM', '12-2 PM', '2-4 PM', '4-6 PM', '6-8 PM']
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Horas productivas'
+                    }
+                },
+                tooltip: {
+                    valueSuffix: ' horas'
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: productivityData.productiveHours,
+                credits: {
+                    enabled: false
+                }
+            });
+
+            // Gráfico de progreso de objetivos mensuales
+            Highcharts.chart('monthlyGoalsChart', {
+                chart: {
+                    type: 'gauge',
+                    plotBackgroundColor: null,
+                    plotBackgroundImage: null,
+                    plotBorderWidth: 0,
+                    plotShadow: false,
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                pane: {
+                    startAngle: -150,
+                    endAngle: 150,
+                    background: [{
+                        backgroundColor: '#EEE',
+                        borderWidth: 0,
+                        outerRadius: '109%'
+                    }]
+                },
+                yAxis: {
+                    min: 0,
+                    max: 100,
+                    minorTickInterval: 'auto',
+                    minorTickWidth: 1,
+                    minorTickLength: 10,
+                    minorTickPosition: 'inside',
+                    minorTickColor: '#666',
+                    tickPixelInterval: 30,
+                    tickWidth: 2,
+                    tickPosition: 'inside',
+                    tickLength: 10,
+                    tickColor: '#666',
+                    labels: {
+                        step: 2,
+                        rotation: 'auto'
+                    },
+                    title: {
+                        text: 'Progreso %'
+                    },
+                    plotBands: [{
+                        from: 0,
+                        to: 60,
+                        color: '#FF6B6B'
+                    }, {
+                        from: 60,
+                        to: 80,
+                        color: '#F5B7A5'
+                    }, {
+                        from: 80,
+                        to: 100,
+                        color: '#A3C9A8'
+                    }]
+                },
+                series: [{
+                    name: 'Progreso',
+                    data: [Math.round(goalsData.monthlyGoals.reduce((acc, goal) => acc + goal.progress, 0) / goalsData.monthlyGoals.length)],
+                    tooltip: {
+                        valueSuffix: ' %'
+                    }
+                }],
+                credits: {
+                    enabled: false
+                }
+            });
+
+            // Gráfico de tendencia de cumplimiento de objetivos
+            Highcharts.chart('goalsCompletionTrendChart', {
+                chart: {
+                    type: 'areaspline',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                xAxis: {
+                    categories: goalsData.completionTrend.map(item => item.month)
+                },
+                yAxis: {
+                    title: {
+                        text: 'Tasa de cumplimiento (%)'
+                    },
+                    min: 0,
+                    max: 100
+                },
+                tooltip: {
+                    valueSuffix: '%'
+                },
+                plotOptions: {
+                    areaspline: {
+                        fillOpacity: 0.5
+                    }
+                },
+                series: [{
+                    name: 'Cumplimiento',
+                    data: goalsData.completionTrend.map(item => item.value),
+                    color: '#4ECDC4',
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 0,
+                            x2: 0,
+                            y2: 1
+                        },
+                        stops: [
+                            [0, Highcharts.color('#4ECDC4').setOpacity(0.6).get('rgba')],
+                            [1, Highcharts.color('#4ECDC4').setOpacity(0.1).get('rgba')]
+                        ]
+                    }
+                }],
+                credits: {
+                    enabled: false
+                }
+            });
+
+            // Gráfico de distribución de objetivos por categoría
+            Highcharts.chart('goalsCategoryChart', {
+                chart: {
+                    type: 'pie',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
                         }
                     }
+                },
+                series: [{
+                    name: 'Categoría',
+                    colorByPoint: true,
+                    data: goalsData.categoryDistribution
+                }],
+                credits: {
+                    enabled: false
                 }
-            }
-        );
+            });
 
-        // Función para generar recomendaciones basadas en el análisis
-        function generateRecommendations() {
+            // Gráfico de efectividad de técnicas
+            Highcharts.chart('techniquesEffectivenessChart', {
+                chart: {
+                    type: 'column',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                xAxis: {
+                    categories: techniquesData.effectiveness.map(item => item.name),
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    max: 100,
+                    title: {
+                        text: 'Efectividad (%)'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y:.1f}%</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'Efectividad',
+                    data: techniquesData.effectiveness.map(item => item.y),
+                    colorByPoint: true,
+                    colors: techniquesData.effectiveness.map(item => item.color)
+                }],
+                credits: {
+                    enabled: false
+                }
+            });
+
+            // Gráfico de tiempo dedicado por técnica
+            Highcharts.chart('techniqueTimeChart', {
+                chart: {
+                    type: 'line',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                xAxis: {
+                    categories: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
+                },
+                yAxis: {
+                    title: {
+                        text: 'Tiempo (horas)'
+                    }
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: true
+                        }
+                    }
+                },
+                series: techniquesData.timeSpent,
+                credits: {
+                    enabled: false
+                }
+            });
+
+            // Gráfico de tasa de finalización de tareas por técnica
+            Highcharts.chart('techniqueCompletionRateChart', {
+                chart: {
+                    type: 'bar',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                xAxis: {
+                    categories: ['Pomodoro', 'Flowtime', 'Time Boxing']
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Número de tareas'
+                    }
+                },
+                legend: {
+                    reversed: true
+                },
+                plotOptions: {
+                    series: {
+                        stacking: 'normal'
+                    }
+                },
+                series: techniquesData.completionRate,
+                credits: {
+                    enabled: false
+                }
+            });
+        }
+
+        // Renderizar objetivos mensuales
+        function renderMonthlyGoals() {
+            const container = document.getElementById('monthlyGoalsList');
+            container.innerHTML = '';
+
+            goalsData.monthlyGoals.forEach(goal => {
+                const goalCard = document.createElement('div');
+                goalCard.className = 'goal-card';
+                
+                let progressColor = '#FF6B6B'; // Rojo para progreso bajo
+                if (goal.progress >= 80) {
+                    progressColor = '#A3C9A8'; // Verde para progreso alto
+                } else if (goal.progress >= 60) {
+                    progressColor = '#F5B7A5'; // Naranja para progreso medio
+                }
+
+                goalCard.innerHTML = `
+                    <h4>${goal.name}</h4>
+                    <small>Categoría: ${goal.category} | Vence: ${goal.dueDate}</small>
+                    <div class="progress-bar" style="margin-top: 0.5rem;">
+                        <div class="progress-value" style="width: ${goal.progress}%; background-color: ${progressColor};"></div>
+                    </div>
+                    <div class="progress-info">
+                        <span>Progreso</span>
+                        <span>${goal.progress}%</span>
+                    </div>
+                `;
+
+                container.appendChild(goalCard);
+            });
+        }
+
+        // Renderizar estadísticas de técnicas
+        function renderTechniqueStats() {
+            const container = document.getElementById('techniqueStatsList');
+            container.innerHTML = '';
+
+            techniquesData.techniques.forEach(technique => {
+                const techniqueCard = document.createElement('div');
+                techniqueCard.className = 'technique-card';
+                
+                techniqueCard.innerHTML = `
+                    <h4><i class="fas ${technique.icon}"></i> ${technique.name}</h4>
+                    <div class="progress-bar">
+                        <div class="progress-value" style="width: ${technique.effectiveness}%;"></div>
+                    </div>
+                    <div class="progress-info">
+                        <span>Efectividad</span>
+                        <span>${technique.effectiveness}%</span>
+                    </div>
+                    <div class="technique-stats-grid">
+                        <div class="technique-stat">
+                            <div class="value completed">${technique.completed}</div>
+                            <div class="label">Completadas</div>
+                        </div>
+                        <div class="technique-stat">
+                            <div class="value partial">${technique.partial}</div>
+                            <div class="label">Parciales</div>
+                        </div>
+                        <div class="technique-stat">
+                            <div class="value not-started">${technique.notStarted}</div>
+                            <div class="label">No iniciadas</div>
+                        </div>
+                        <div class="technique-stat">
+                            <div class="value">${technique.totalTime}</div>
+                            <div class="label">Tiempo total</div>
+                        </div>
+                        <div class="technique-stat">
+                            <div class="value">${technique.avgSessionTime}</div>
+                            <div class="label">Tiempo promedio</div>
+                        </div>
+                        <div class="technique-stat">
+                            <div class="value">${technique.completed + technique.partial + technique.notStarted}</div>
+                            <div class="label">Total tareas</div>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(techniqueCard);
+            });
+        }
+
+        // Generar recomendaciones generales
+        function generateGeneralRecommendations() {
             const recommendations = [
                 {
                     icon: 'fa-clock',
@@ -382,7 +1103,7 @@
                 {
                     icon: 'fa-list-check',
                     title: 'Priorización de tareas',
-                    description: 'Identifica las tareas más importantes al inicio del día y realízalas durante tus horas más productivas.'
+                    description: 'Identifica las tareas más importantes al inicio del día y realízalas durante tus horas más productivas (10-12 AM y 4-6 PM según tus datos).'
                 },
                 {
                     icon: 'fa-bell',
@@ -408,13 +1129,118 @@
             `).join('');
         }
 
-        // Inicializar recomendaciones
-        generateRecommendations();
+        // Generar recomendaciones para objetivos
+        function generateGoalsRecommendations() {
+            const recommendations = [
+                {
+                    icon: 'fa-bullseye',
+                    title: 'Establece objetivos SMART',
+                    description: 'Asegúrate de que tus objetivos sean Específicos, Medibles, Alcanzables, Relevantes y con Tiempo definido.'
+                },
+                {
+                    icon: 'fa-calendar-check',
+                    title: 'Divide tus objetivos en tareas más pequeñas',
+                    description: 'Descompón tus objetivos en tareas más manejables y programa tiempo específico para trabajar en ellas.'
+                },
+                {
+                    icon: 'fa-chart-simple',
+                    title: 'Revisa tu progreso semanalmente',
+                    description: 'Dedica 15 minutos cada semana para revisar tu progreso y ajustar tu plan según sea necesario.'
+                },
+                {
+                    icon: 'fa-trophy',
+                    title: 'Celebra tus logros',
+                    description: 'Reconoce y celebra cuando alcances hitos importantes en tus objetivos para mantener la motivación.'
+                }
+            ];
 
-        // Evento para cambiar el rango de tiempo
-        document.getElementById('timeRange').addEventListener('change', function(e) {
-            // Aquí se actualizarían los datos según el rango seleccionado
-            console.log('Rango seleccionado:', e.target.value);
+            const recommendationsList = document.getElementById('goalsRecommendationsList');
+            recommendationsList.innerHTML = recommendations.map(rec => `
+                <div class="recommendation-item">
+                    <i class="fas ${rec.icon} recommendation-icon"></i>
+                    <div>
+                        <h4>${rec.title}</h4>
+                        <p>${rec.description}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Generar recomendaciones para técnicas
+        function generateTechniquesRecommendations() {
+            const recommendations = [
+                {
+                    icon: 'fa-calendar-check',
+                    title: 'Optimiza tu uso de Time Boxing',
+                    description: 'Según tus datos, Time Boxing es tu técnica más efectiva (90%). Considera usarla para tareas que requieren alta concentración y tienen plazos definidos.'
+                },
+                {
+                    icon: 'fa-clock',
+                    title: 'Ajusta tus sesiones de Pomodoro',
+                    description: 'Tu tiempo promedio de sesión es de 28 minutos. Considera aumentar tus intervalos Pomodoro de 25 a 30 minutos para alinearse mejor con tu ritmo natural.'
+                },
+                {
+                    icon: 'fa-hourglass-half',
+                    title: 'Mejora tu técnica Flowtime',
+                    description: 'Tienes una alta tasa de tareas parcialmente completadas con Flowtime (20). Establece puntos de control para evaluar tu progreso durante las sesiones.'
+                },
+                {
+                    icon: 'fa-rotate',
+                    title: 'Alterna entre técnicas',
+                    description: 'Usa Pomodoro para tareas rutinarias, Flowtime para trabajo creativo y Time Boxing para proyectos con plazos estrictos.'
+                }
+            ];
+
+            const recommendationsList = document.getElementById('techniquesRecommendationsList');
+            recommendationsList.innerHTML = recommendations.map(rec => `
+                <div class="recommendation-item">
+                    <i class="fas ${rec.icon} recommendation-icon"></i>
+                    <div>
+                        <h4>${rec.title}</h4>
+                        <p>${rec.description}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Manejar cambios de pestaña
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // Actualizar pestañas activas
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Actualizar contenido visible
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === `${tabId}-tab`) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+        }
+
+        // Exportar datos
+        document.getElementById('exportDataBtn').addEventListener('click', function() {
+            alert('Datos exportados correctamente en formato CSV.');
+        });
+
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            renderMonthlyGoals();
+            renderTechniqueStats();
+            generateGeneralRecommendations();
+            generateGoalsRecommendations();
+            generateTechniquesRecommendations();
+            setupTabs();
         });
     </script>
 </body>

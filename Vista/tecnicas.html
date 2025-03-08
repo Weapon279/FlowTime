@@ -3,170 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TimeFlow - Gestión de Tiempo y Tareas</title>
+    <title>Técnicas de Productividad - TimeFlow</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #A3C9A8;
-            --primary-light: #BFD7EA;
-            --secondary: #F5B7A5;
-            --accent: #F4EAE0;
-            --background: #FFFFFF;
-            --surface: #F4EAE0;
-            --text: #333333;
-            --text-light: #6D8299;
-            --border: #BFD7EA;
-            --success: #A3C9A8;
-            --warning: #F5B7A5;
-        }
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../includes/css/dashboard.css">
+    <link rel="stylesheet" href="../includes/css/tecnicas.css">
+    <link rel="stylesheet" href="../includes/js/tecnicas.js">
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Nunito', sans-serif;
-            background-color: var(--background);
-            color: var(--text);
-            line-height: 1.5;
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            background-color: var(--surface);
-            padding: 1.5rem;
-            border-right: 1px solid var(--border);
-        }
-
-        .main-content {
-            padding: 2rem;
-        }
-
-        h1, h2 {
-            font-family: 'Poppins', sans-serif;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-
-        .section {
-            background-color: var(--surface);
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        form {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        input, select, button {
-            padding: 0.5rem;
-            border: 1px solid var(--border);
-            border-radius: 0.25rem;
-            font-family: 'Nunito', sans-serif;
-        }
-
-        button {
-            background-color: var(--primary);
-            color: var(--background);
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: var(--primary-light);
-        }
-
-        .task-list {
-            margin-top: 1rem;
-        }
-
-        .task-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            background-color: var(--background);
-            border-radius: 0.5rem;
-            margin-bottom: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .task-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .task-item.completed {
-            opacity: 0.6;
-            text-decoration: line-through;
-        }
-
-        .technique-flow {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 1rem;
-        }
-
-        .technique-step {
-            flex: 1;
-            text-align: center;
-            padding: 1rem;
-            background-color: var(--background);
-            border-radius: 0.5rem;
-            margin: 0 0.5rem;
-            opacity: 0.5;
-            transition: all 0.3s ease;
-        }
-
-        .technique-step.active {
-            opacity: 1;
-            transform: scale(1.05);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .progress-bar {
-            height: 0.5rem;
-            background-color: var(--border);
-            border-radius: 0.25rem;
-            margin-top: 1rem;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background-color: var(--primary);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        #timer {
-            font-size: 2rem;
-            font-weight: bold;
-            text-align: center;
-            margin: 1rem 0;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .animate-fadeIn {
-            animation: fadeIn 0.5s ease-out;
-        }
-    </style>
 </head>
 <body>
     <div class="dashboard">
@@ -177,234 +23,353 @@
             </div>
             <nav>
                 <ul class="nav-links">
-                    <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
-                    <li><a href="#"><i class="fas fa-tasks"></i> Tareas</a></li>
-                    <li><a href="#"><i class="fas fa-calendar"></i> Calendario</a></li>
-                    <li><a href="#"><i class="fas fa-chart-line"></i> Análisis</a></li>
-                    <li><a href="#"><i class="fas fa-cog"></i> Configuración</a></li>
+                    <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="tareas.html"><i class="fas fa-tasks"></i> Tareas</a></li>
+                    <li><a href="calendario.html"><i class="fas fa-calendar"></i> Calendario</a></li>
+                    <li><a href="gantt.html"><i class="fas fa-project-diagram"></i> Gantt</a></li>
+                    <li><a href="tecnicas.html" class="active"><i class="fas fa-brain"></i> Técnicas</a></li>
+                    <li><a href="analisis.html"><i class="fas fa-chart-line"></i> Análisis</a></li>
+                    <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
                 </ul>
             </nav>
         </aside>
 
         <main class="main-content">
-            <div id="taskManagement" class="section animate-fadeIn">
-                <h2>Gestión de Tareas</h2>
-                <form id="addTaskForm">
-                    <input type="text" id="taskName" placeholder="Nombre de la tarea" required>
-                    <select id="taskDifficulty" required>
-                        <option value="">Dificultad</option>
-                        <option value="1">Fácil</option>
-                        <option value="2">Media</option>
-                        <option value="3">Difícil</option>
-                    </select>
-                    <button type="submit">Agregar Tarea</button>
-                </form>
-                <div id="taskList" class="task-list"></div>
+            <h1>Técnicas de Productividad</h1>
+            
+            <!-- Menú principal: Selección de tipo de tarea -->
+            <div id="taskTypeSelection" class="task-type-selection">
+                <div class="task-type-card" onclick="selectTaskType('daily')">
+                    <i class="fas fa-calendar-day"></i>
+                    <h3>Tareas Diarias</h3>
+                    <p>Utiliza Pomodoro o Flowtime para gestionar tus tareas del día a día.</p>
+                </div>
+                <div class="task-type-card" onclick="selectTaskType('goals')">
+                    <i class="fas fa-bullseye"></i>
+                    <h3>Metas y Objetivos</h3>
+                    <p>Utiliza Time Boxing para asignar bloques de tiempo específicos a tus metas y objetivos.</p>
+                </div>
             </div>
 
-            <div id="techniqueSelection" class="section animate-fadeIn" style="display: none;">
-                <h2>Selecciona tu Técnica</h2>
-                <button id="pomodoroBtn">Pomodoro</button>
-                <button id="flowtimeBtn">Flowtime</button>
+            <!-- Sección de consejos e información -->
+            <div class="tips-section">
+                <div class="tips-header" onclick="toggleTips()">
+                    <i class="fas fa-lightbulb"></i>
+                    <h2>Consejos e Información</h2>
+                </div>
+                <div class="tips-content" id="tipsContent">
+                    <div class="technique-tabs">
+                        <div class="technique-tab active" onclick="showTechniqueInfo('pomodoro-tab')">Pomodoro</div>
+                        <div class="technique-tab" onclick="showTechniqueInfo('flowtime-tab')">Flowtime</div>
+                        <div class="technique-tab" onclick="showTechniqueInfo('timeboxing-tab')">Time Boxing</div>
+                    </div>
+
+                    <div class="technique-content active" id="pomodoro-tab">
+                        <h3>Técnica Pomodoro</h3>
+                        <p>Desarrollada por Francesco Cirillo a finales de los años 80, la técnica Pomodoro es un método de gestión del tiempo que utiliza intervalos de trabajo cronometrados, tradicionalmente de 25 minutos, seguidos de breves descansos.</p>
+                        
+                        <div class="tip-card">
+                            <h4>¿Cómo funciona?</h4>
+                            <ol>
+                                <li><strong>Planifica:</strong> Decide qué tarea vas a realizar.</li>
+                                <li><strong>Configura:</strong> Ajusta un temporizador a 25 minutos (un "pomodoro").</li>
+                                <li><strong>Trabaja:</strong> Concéntrate exclusivamente en esa tarea hasta que suene el temporizador.</li>
+                                <li><strong>Descansa:</strong> Toma un descanso corto de 5 minutos.</li>
+                                <li><strong>Repite:</strong> Después de 4 pomodoros, toma un descanso más largo de 15-30 minutos.</li>
+                            </ol>
+                        </div>
+
+                        <div class="tip-card">
+                            <h4>Beneficios</h4>
+                            <ul>
+                                <li>Reduce la fatiga mental al dividir el trabajo en intervalos manejables.</li>
+                                <li>Minimiza las interrupciones y mejora la concentración.</li>
+                                <li>Aumenta la conciencia del tiempo y mejora la estimación de tareas.</li>
+                                <li>Combate la procrastinación al hacer que sea más fácil comenzar.</li>
+                            </ul>
+                        </div>
+
+                        <div class="tip-card">
+                            <h4>Consejos prácticos</h4>
+                            <ul>
+                                <li>Ajusta la duración de los intervalos según tus necesidades (algunos prefieren 30 o 45 minutos).</li>
+                                <li>Durante un pomodoro, anota cualquier distracción que surja para abordarla después.</li>
+                                <li>Si terminas una tarea antes de que acabe el pomodoro, usa el tiempo restante para revisar o mejorar tu trabajo.</li>
+                                <li>Comunica a tus compañeros cuando estás en un pomodoro para evitar interrupciones.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="technique-content" id="flowtime-tab">
+                        <h3>Técnica Flowtime</h3>
+                        <p>La técnica Flowtime es una adaptación más flexible de Pomodoro que respeta tu estado de concentración natural o "flow". En lugar de interrumpir tu trabajo con descansos programados, te permite trabajar mientras estés concentrado y descansar cuando lo necesites.</p>
+                        
+                        <div class="tip-card">
+                            <h4>¿Cómo funciona?</h4>
+                            <ol>
+                                <li><strong>Selecciona:</strong> Elige una tarea específica para trabajar.</li>
+                                <li><strong>Registra:</strong> Anota la hora de inicio.</li>
+                                <li><strong>Trabaja:</strong> Concéntrate en la tarea hasta que sientas que necesitas un descanso.</li>
+                                <li><strong>Descansa:</strong> Toma un descanso proporcional al tiempo trabajado (aproximadamente 1/5 del tiempo de trabajo).</li>
+                                <li><strong>Documenta:</strong> Registra cuánto tiempo trabajaste y descansaste.</li>
+                            </ol>
+                        </div>
+
+                        <div class="tip-card">
+                            <h4>Beneficios</h4>
+                            <ul>
+                                <li>Respeta tu ritmo natural de concentración y energía.</li>
+                                <li>Evita interrumpir el "flow" cuando estás profundamente concentrado.</li>
+                                <li>Proporciona flexibilidad para diferentes tipos de tareas.</li>
+                                <li>Te ayuda a entender tus patrones personales de productividad.</li>
+                            </ul>
+                        </div>
+
+                        <div class="tip-card">
+                            <h4>Consejos prácticos</h4>
+                            <ul>
+                                <li>Lleva un registro de tus sesiones para identificar patrones (cuándo eres más productivo, qué tareas requieren más concentración, etc.).</li>
+                                <li>Si te distraes fácilmente, comienza con sesiones más cortas e incrementa gradualmente.</li>
+                                <li>Establece un límite máximo de tiempo de trabajo (por ejemplo, 90 minutos) para evitar el agotamiento.</li>
+                                <li>Usa la proporción 5:1 como guía para los descansos (por cada 25 minutos de trabajo, 5 minutos de descanso).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="technique-content" id="timeboxing-tab">
+                        <h3>Técnica Time Boxing</h3>
+                        <p>Time Boxing es una técnica de gestión del tiempo que consiste en asignar bloques de tiempo fijos ("cajas de tiempo") a actividades específicas. Es especialmente útil para proyectos grandes, metas a largo plazo y para combatir la ley de Parkinson (el trabajo se expande para llenar el tiempo disponible).</p>
+                        
+                        <div class="tip-card">
+                            <h4>¿Cómo funciona?</h4>
+                            <ol>
+                                <li><strong>Planifica:</strong> Identifica las tareas o actividades que necesitas realizar.</li>
+                                <li><strong>Asigna:</strong> Determina cuánto tiempo dedicarás a cada tarea.</li>
+                                <li><strong>Programa:</strong> Coloca estos bloques de tiempo en tu calendario.</li>
+                                <li><strong>Ejecuta:</strong> Trabaja exclusivamente en la tarea asignada durante ese tiempo.</li>
+                                <li><strong>Evalúa:</strong> Al final del bloque, evalúa tu progreso y ajusta según sea necesario.</li>
+                            </ol>
+                        </div>
+
+                        <div class="tip-card">
+                            <h4>Beneficios</h4>
+                            <ul>
+                                <li>Evita que las tareas se extiendan indefinidamente.</li>
+                                <li>Proporciona estructura y claridad a tu día.</li>
+                                <li>Facilita la priorización de tareas importantes.</li>
+                                <li>Mejora la estimación de tiempo para proyectos futuros.</li>
+                                <li>Reduce la procrastinación al establecer plazos claros.</li>
+                            </ul>
+                        </div>
+
+                        <div class="tip-card">
+                            <h4>Consejos prácticos</h4>
+                            <ul>
+                                <li>Sé realista con tus estimaciones de tiempo (es mejor sobreestimar que subestimar).</li>
+                                <li>Incluye "buffers" entre bloques para manejar imprevistos.</li>
+                                <li>Combina Time Boxing con la técnica Pomodoro para tareas más largas.</li>
+                                <li>Reserva bloques específicos para tareas creativas cuando tu energía esté en su punto máximo.</li>
+                                <li>Programa bloques para revisar y ajustar tus planes regularmente.</li>
+                            </ul>
+                        </div>
+
+                        <div class="tip-card">
+                            <h4>Aplicaciones ideales</h4>
+                            <ul>
+                                <li>Proyectos complejos que requieren avances constantes.</li>
+                                <li>Metas a largo plazo que necesitan atención regular.</li>
+                                <li>Tareas que tienden a expandirse indefinidamente.</li>
+                                <li>Equilibrar múltiples responsabilidades o proyectos.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div id="techniqueFlow" class="section animate-fadeIn" style="display: none;">
-                <h2 id="techniqueTitle"></h2>
-                <div class="technique-flow">
-                    <div class="technique-step" id="step1">
+            <!-- Gestión de tareas diarias -->
+            <div id="dailyTasksSection" class="technique-info">
+                <div class="back-button" onclick="backToMainMenu()">
+                    <i class="fas fa-arrow-left"></i> Volver al menú principal
+                </div>
+                <div class="section-title">
+                    <h2>Tareas Diarias</h2>
+                </div>
+                
+                <div class="task-form">
+                    <input type="text" id="dailyTaskInput" placeholder="Agregar nueva tarea diaria">
+                    <button class="btn" onclick="addDailyTask()">Agregar</button>
+                </div>
+                
+                <div id="dailyTaskList" class="task-list"></div>
+                
+                <div id="dailyTaskEditForm" class="edit-form">
+                    <h3>Editar Tarea</h3>
+                    <input type="text" id="editDailyTaskInput">
+                    <input type="hidden" id="editDailyTaskId">
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                        <button class="btn" onclick="updateDailyTask()">Guardar</button>
+                        <button class="btn btn-secondary" onclick="cancelEditDailyTask()">Cancelar</button>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    <button class="btn" onclick="showQuestionnaire()">Elegir Técnica</button>
+                </div>
+            </div>
+
+            <!-- Gestión de metas y objetivos -->
+            <div id="goalsTasksSection" class="technique-info">
+                <div class="back-button" onclick="backToMainMenu()">
+                    <i class="fas fa-arrow-left"></i> Volver al menú principal
+                </div>
+                <div class="section-title">
+                    <h2>Metas y Objetivos</h2>
+                </div>
+                
+                <div class="task-form">
+                    <input type="text" id="goalTaskInput" placeholder="Agregar nueva meta u objetivo">
+                    <button class="btn" onclick="addGoalTask()">Agregar</button>
+                </div>
+                
+                <div id="goalTaskList" class="task-list"></div>
+                
+                <div id="goalTaskEditForm" class="edit-form">
+                    <h3>Editar Meta/Objetivo</h3>
+                    <input type="text" id="editGoalTaskInput">
+                    <input type="hidden" id="editGoalTaskId">
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                        <button class="btn" onclick="updateGoalTask()">Guardar</button>
+                        <button class="btn btn-secondary" onclick="cancelEditGoalTask()">Cancelar</button>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    <button class="btn" onclick="showTimeBoxing()">Usar Time Boxing</button>
+                </div>
+            </div>
+
+            <!-- Cuestionario para tareas diarias (Pomodoro/Flowtime) -->
+            <div class="questionnaire" id="questionnaire" style="display: none;">
+                <div class="back-button" onclick="backToDailyTasks()">
+                    <i class="fas fa-arrow-left"></i> Volver  onclick="backToDailyTasks()">
+                    <i class="fas fa-arrow-left"></i> Volver a tareas diarias
+                </div>
+                <h2>Encuentra tu técnica ideal</h2>
+                <div class="question" style="animation-delay: 0.2s;">
+                    <h3>¿Cómo prefieres estructurar tu tiempo de trabajo?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="time_structure" id="fixed" value="fixed">
+                            <label for="fixed">Prefiero intervalos fijos y estructurados</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="time_structure" id="flexible" value="flexible">
+                            <label for="flexible">Prefiero flexibilidad según mi concentración</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" style="animation-delay: 0.4s;">
+                    <h3>¿Cómo manejas mejor las interrupciones?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="interruptions" id="scheduled" value="scheduled">
+                            <label for="scheduled">Prefiero descansos programados</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="interruptions" id="natural" value="natural">
+                            <label for="natural">Prefiero tomar descansos cuando los necesito</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" style="animation-delay: 0.6s;">
+                    <h3>¿Qué tipo de tareas realizas principalmente?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="task_type" id="focused" value="focused">
+                            <label for="focused">Tareas que requieren concentración intensa</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="task_type" id="creative" value="creative">
+                            <label for="creative">Tareas creativas o que fluyen naturalmente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="analyzeTechnique()">Encontrar mi técnica</button>
+            </div>
+
+            <!-- Time Boxing -->
+            <div id="timeboxing" class="technique-info" style="display: none;">
+                <div class="back-button" onclick="backToGoalTasks()">
+                    <i class="fas fa-arrow-left"></i> Volver a metas y objetivos
+                </div>
+                <h2>Técnica Time Boxing</h2>
+                <p>Time Boxing es una técnica de gestión del tiempo que consiste en asignar bloques de tiempo fijos a actividades específicas. Esto te ayuda a mantener el enfoque, evitar la procrastinación y hacer un seguimiento de tu progreso hacia tus metas y objetivos.</p>
+                
+                <div class="technique-steps">
+                    <div class="technique-step">
+                        <i class="fas fa-list-ol"></i>
+                        <p>Define tus metas y objetivos</p>
+                    </div>
+                    <div class="technique-step">
                         <i class="fas fa-tasks"></i>
-                        <p>Seleccionar Tarea</p>
+                        <p>Divide en tareas específicas</p>
                     </div>
-                    <div class="technique-step" id="step2">
-                        <i class="fas fa-ban"></i>
-                        <p>Eliminar Distracciones</p>
-                    </div>
-                    <div class="technique-step" id="step3">
+                    <div class="technique-step">
                         <i class="fas fa-clock"></i>
-                        <p>Trabajar</p>
+                        <p>Asigna bloques de tiempo</p>
                     </div>
-                    <div class="technique-step" id="step4">
-                        <i class="fas fa-coffee"></i>
-                        <p>Descansar</p>
+                    <div class="technique-step">
+                        <i class="fas fa-check-double"></i>
+                        <p>Completa cada bloque sin distracciones</p>
                     </div>
                 </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
+
+                <h3 style="margin-top: 2rem;">Selecciona una meta/objetivo</h3>
+                <div id="goalTaskSelection" class="task-list"></div>
+
+                <div id="selectedGoalInfo" class="current-task-info" style="display: none;">
+                    <h3>Meta/Objetivo seleccionado:</h3>
+                    <p id="selectedGoalName"></p>
                 </div>
-                <div id="timer">25:00</div>
-                <button id="startBtn">Iniciar</button>
-                <button id="pauseBtn" style="display: none;">Pausar</button>
-                <button id="resumeBtn" style="display: none;">Reanudar</button>
-                <button id="stopBtn" style="display: none;">Detener</button>
+
+                <h3 style="margin-top: 2rem;">Configura tu Time Box</h3>
+                <div class="timebox-form">
+                    <input type="number" id="timeboxDuration" placeholder="Duración (minutos)" min="5" max="180" required>
+                    <button class="btn" onclick="startTimeBoxing()">Comenzar Time Boxing</button>
+                </div>
+            </div>
+
+            <!-- Información de técnica seleccionada -->
+            <div class="technique-info" id="techniqueInfo">
+                <!-- El contenido se llenará dinámicamente -->
             </div>
         </main>
     </div>
 
-    <script>
-        // Task management
-        const tasks = [];
-        const addTaskForm = document.getElementById('addTaskForm');
-        const taskList = document.getElementById('taskList');
-        let selectedTask = null;
+    <div class="timer-modal" id="timerModal">
+        <div class="timer-content">
+            <h2 id="timerTitle">Tiempo de trabajo</h2>
+            <div id="currentTaskInfo" class="current-task-info">
+                <h3>Tarea actual:</h3>
+                <p id="currentTaskName"></p>
+            </div>
+            <div class="timer-display" id="timerDisplay">25:00</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="timer-controls">
+                <button class="btn" id="startTimer">Iniciar</button>
+                <button class="btn btn-secondary" id="pauseTimer" style="display: none;">Pausar</button>
+                <button class="btn" id="resumeTimer" style="display: none;">Reanudar</button>
+                <button class="btn btn-secondary" id="completeTaskBtn" style="display: none;">Completar Tarea</button>
+                <button class="btn btn-outline" id="cancelTimer">Cancelar</button>
+            </div>
+        </div>
+    </div>
 
-        addTaskForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const taskName = document.getElementById('taskName').value;
-            const taskDifficulty = document.getElementById('taskDifficulty').value;
-            
-            tasks.push({ id: Date.now(), name: taskName, difficulty: parseInt(taskDifficulty), completed: false });
-            updateTaskList();
-            addTaskForm.reset();
-        });
-
-        function updateTaskList() {
-            taskList.innerHTML = '';
-            tasks.sort((a, b) => b.difficulty - a.difficulty); // Sort by difficulty (Eat That Frog principle)
-            
-            tasks.forEach((task) => {
-                const taskItem = document.createElement('div');
-                taskItem.className = `task-item ${task.completed ? 'completed' : ''}`;
-                taskItem.innerHTML = `
-                    <span class="task-name">${task.name}</span>
-                    <span class="task-difficulty">Dificultad: ${'🐸'.repeat(task.difficulty)}</span>
-                    <button class="select-task" data-id="${task.id}">Seleccionar</button>
-                    <button class="toggle-task" data-id="${task.id}">${task.completed ? 'Desmarcar' : 'Completar'}</button>
-                `;
-                taskList.appendChild(taskItem);
-            });
-
-            if (tasks.length > 0) {
-                document.getElementById('techniqueSelection').style.display = 'block';
-            }
-
-            // Add event listeners for task buttons
-            document.querySelectorAll('.select-task').forEach(btn => {
-                btn.addEventListener('click', (e) => selectTask(e.target.dataset.id));
-            });
-            document.querySelectorAll('.toggle-task').forEach(btn => {
-                btn.addEventListener('click', (e) => toggleTaskCompletion(e.target.dataset.id));
-            });
-        }
-
-        function selectTask(taskId) {
-            selectedTask = tasks.find(task => task.id === parseInt(taskId));
-            alert(`Tarea seleccionada: ${selectedTask.name}`);
-            currentStep = 1; // Move to "Eliminar Distracciones" step
-            updateTechniqueFlow();
-        }
-
-        function toggleTaskCompletion(taskId) {
-            const task = tasks.find(task => task.id === parseInt(taskId));
-            task.completed = !task.completed;
-            updateTaskList();
-        }
-
-        // Technique selection and flow
-        let currentTechnique = null;
-        let currentStep = 0;
-        let timer = null;
-        let timeLeft = 0;
-        let isWorking = true;
-
-        document.getElementById('pomodoroBtn').addEventListener('click', () => startTechnique('pomodoro'));
-        document.getElementById('flowtimeBtn').addEventListener('click', () => startTechnique('flowtime'));
-
-        function startTechnique(technique) {
-            currentTechnique = technique;
-            document.getElementById('techniqueSelection').style.display = 'none';
-            document.getElementById('techniqueFlow').style.display = 'block';
-            document.getElementById('techniqueTitle').textContent = technique === 'pomodoro' ? 'Técnica Pomodoro' : 'Técnica Flowtime';
-            currentStep = 0;
-            updateTechniqueFlow();
-        }
-
-        function updateTechniqueFlow() {
-            const steps = document.querySelectorAll('.technique-step');
-            steps.forEach((step, index) => {
-                step.classList.toggle('active', index === currentStep);
-            });
-
-            if (currentStep === 0) {
-                alert('Selecciona la tarea más difícil para empezar. ¡Come esa rana!');
-            } else if (currentStep === 1) {
-                alert('Elimina todas las distracciones antes de comenzar.');
-            } else if (currentStep === 2) {
-                startTimer();
-            }
-        }
-
-        function startTimer() {
-            if (currentTechnique === 'pomodoro') {
-                timeLeft = isWorking ? 25 * 60 : 5 * 60;
-            } else {
-                timeLeft = 0;
-            }
-            updateTimerDisplay();
-            document.getElementById('startBtn').style.display = 'none';
-            document.getElementById('pauseBtn').style.display = 'inline-block';
-            document.getElementById('stopBtn').style.display = 'inline-block';
-
-            timer = setInterval(() => {
-                if (currentTechnique === 'pomodoro') {
-                    timeLeft--;
-                    if (timeLeft <= 0) {
-                        clearInterval(timer);
-                        isWorking = !isWorking;
-                        alert(isWorking ? '¡Tiempo de trabajo!' : '¡Tiempo de descanso!');
-                        startTimer();
-                    }
-                } else {
-                    timeLeft++;
-                }
-                updateTimerDisplay();
-            }, 1000);
-        }
-
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            document.getElementById('timer').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            
-            if (currentTechnique === 'pomodoro') {
-                const totalTime = isWorking ? 25 * 60 : 5 * 60;
-                const progress = ((totalTime - timeLeft) / totalTime) * 100;
-                document.getElementById('progressFill').style.width = `${progress}%`;
-            } else {
-                const progress = (timeLeft / (60 * 60)) * 100; // Max 1 hour for Flowtime
-                document.getElementById('progressFill').style.width = `${progress}%`;
-            }
-        }
-
-        document.getElementById('pauseBtn').addEventListener('click', () => {
-            clearInterval(timer);
-            document.getElementById('pauseBtn').style.display = 'none';
-            document.getElementById('resumeBtn').style.display = 'inline-block';
-        });
-
-        document.getElementById('resumeBtn').addEventListener('click', () => {
-            startTimer();
-            document.getElementById('resumeBtn').style.display = 'none';
-            document.getElementById('pauseBtn').style.display = 'inline-block';
-        });
-
-        document.getElementById('stopBtn').addEventListener('click', () => {
-            clearInterval(timer);
-            currentStep = 3; // Move to break step
-            updateTechniqueFlow();
-            document.getElementById('startBtn').style.display = 'inline-block';
-            document.getElementById('pauseBtn').style.display = 'none';
-            document.getElementById('resumeBtn').style.display = 'none';
-            document.getElementById('stopBtn').style.display = 'none';
-        });
-
-        document.getElementById('startBtn').addEventListener('click', () => {
-            if (selectedTask) {
-                currentStep = 2; // Move to work step
-                updateTechniqueFlow();
-            } else {
-                alert('Por favor, selecciona una tarea antes de comenzar.');
-            }
-        });
-    </script>
+    <script src="../includes/js/tecnicas.js"></script>
 </body>
 </html>
