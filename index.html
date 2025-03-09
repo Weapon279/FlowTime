@@ -3,115 +3,324 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlowTime - Gestiona tu tiempo de manera eficiente</title>
+    <meta name="description" content="TimeFlow - Recupera el control de tu tiempo y aumenta tu productividad con nuestra plataforma inteligente">
+    <meta name="keywords" content="gestión del tiempo, productividad, organización, tareas, pomodoro, planificación">
+    <title>FlowTime - Domina tu tiempo, transforma tu vida</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="includes/css/estilo.css">
     <link rel="stylesheet" href="includes/css/animacion.css">
+    <link rel="icon" href="includes/img/favicon.ico" type="image/x-icon">
+    <!-- Open Graph tags -->
+    <meta property="og:title" content="TimeFlow - Recupera el control de tu tiempo">
+    <meta property="og:description" content="Plataforma inteligente para gestionar tu tiempo y aumentar tu productividad">
+    <meta property="og:image" content="includes/img/og-image.jpg">
+    <meta property="og:url" content="https://timeflow.app">
+    <meta property="og:type" content="website">
 </head>
 <body>
-    <header class="bg-white shadow-md animate-slideInTop">
-        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="index.html" class="text-2xl font-bold text-gray-800 animate-pulse">FlowTime</a>
-            <ul class="flex space-x-4">
-                <li><a href="#problema" class="text-gray-600 hover:text-gray-800 animate-fadeIn delay-100">Problema</a></li>
-                <li><a href="#solucion" class="text-gray-600 hover:text-gray-800 animate-fadeIn delay-200">Solución</a></li>
-                <li><a href="#beneficios" class="text-gray-600 hover:text-gray-800 animate-fadeIn delay-300">Beneficios</a></li>
-                <li><a href="login.php" class="btn btn-primary animate-fadeIn delay-400">Iniciar Sesión</a></li>
-                <li><a href="register.php" class="btn btn-secondary animate-fadeIn delay-500">Registrarse</a></li>
-            </ul>
-        </nav>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-clock logo-icon"></i>
+                    <span>FlowTime</span>
+                </a>
+                
+                <button class="menu-toggle" aria-label="Abrir menú">
+                    <span></span><span></span><span></span>
+                </button>
+                
+                <ul class="nav-menu">
+                    <li><a href="#problema" class="nav-link">El Problema</a></li>
+                    <li><a href="#solucion" class="nav-link">Solución</a></li>
+                    <li><a href="#como-funciona" class="nav-link">Cómo Funciona</a></li>
+                    <li><a href="#faq" class="nav-link">FAQ</a></li>
+                    <li><a href="login.php" class="btn btn-outline">Iniciar Sesión</a></li>
+                    <li><a href="register.php" class="btn btn-primary">Prueba Gratis</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        <section id="hero" class="bg-beige py-20">
-            <div class="container mx-auto px-4 text-center">
-                <h1 class="text-5xl font-bold mb-6 animate-slideInBottom">Domina tu tiempo, domina tu vida</h1>
-                <p class="text-xl mb-8 animate-fadeIn delay-300">FlowTime te ayuda a gestionar tu tiempo de manera eficiente y relajada</p>
-                <a href="#solucion" class="btn btn-primary text-lg animate-bounce">Descubre cómo</a>
+    <main class="main-content">
+        <section id="hero" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">¿Y si pudieras <span class="highlight">recuperar</span> tu tiempo?</h1>
+                    <p class="hero-subtitle">El 83% de las personas sienten que no tienen control sobre su tiempo. FlowTime cambia eso.</p>
+                    <div class="hero-cta">
+                        <a href="register.php" class="btn btn-primary btn-lg">Comenzar Ahora</a>
+                        <a href="#como-funciona" class="btn btn-outline btn-lg">Ver Cómo Funciona</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="includes/img/dash.png" alt="Dashboard de TimeFlow mostrando gestión de tiempo" class="dashboard-preview">
+                </div>
             </div>
         </section>
 
-        <section id="problema" class="py-16 bg-white">
-            <div class="container mx-auto px-4">
-                <h2 class="text-3xl font-bold mb-8 text-center animate-slideInBottom">El Problema</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="bg-blue p-6 rounded-lg shadow-md animate-slideInLeft delay-100">
-                        <h3 class="text-xl font-semibold mb-4">Desconocimiento</h3>
-                        <p>Muchas personas no saben cómo organizar eficientemente sus actividades diarias.</p>
+        <section id="problema-solucion" class="problema-solucion">
+            <div class="container">
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="problema">El Problema</button>
+                        <button class="tab-btn" data-tab="solucion">La Solución</button>
                     </div>
-                    <div class="bg-blue p-6 rounded-lg shadow-md animate-slideInBottom delay-300">
-                        <h3 class="text-xl font-semibold mb-4">Dificultad</h3>
-                        <p>La gestión del tiempo es compleja y requiere disciplina, lo cual puede ser abrumador.</p>
+                    
+                    <div class="tab-content active" id="problema">
+                        <h2>El problema que todos enfrentamos</h2>
+                        <div class="cards-slider">
+                            <div class="card">
+                                <div class="card-icon"><i class="fas fa-hourglass-end"></i></div>
+                                <h3>Nunca hay suficiente tiempo</h3>
+                                <p>Terminas el día agotado pero con la sensación de no haber avanzado en lo importante.</p>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon"><i class="fas fa-exclamation-circle"></i></div>
+                                <h3>Sobrecarga constante</h3>
+                                <p>Demasiadas tareas, notificaciones y distracciones compitiendo por tu atención.</p>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon"><i class="fas fa-balance-scale"></i></div>
+                                <h3>Desequilibrio vital</h3>
+                                <p>El trabajo consume tu energía, dejando poco espacio para familia, amigos y bienestar.</p>
+                            </div>
+                        </div>
+                        <div class="slider-nav">
+                            <button class="slider-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <div class="slider-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <button class="slider-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
                     </div>
-                    <div class="bg-blue p-6 rounded-lg shadow-md animate-slideInRight delay-500">
-                        <h3 class="text-xl font-semibold mb-4">Falta de motivación</h3>
-                        <p>Muchos no encuentran incentivos para mejorar su gestión del tiempo o mantener buenos hábitos.</p>
+                    
+                    <div class="tab-content" id="solucion">
+                        <h2>La solución que transforma tu productividad</h2>
+                        <div class="cards-slider">
+                            <div class="card">
+                                <div class="card-icon"><i class="fas fa-brain"></i></div>
+                                <h3>Planificación Inteligente</h3>
+                                <p>Nuestro sistema aprende de tus hábitos para sugerir la mejor distribución de tareas.</p>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                                <h3>Análisis de Productividad</h3>
+                                <p>Visualiza patrones, identifica distracciones y optimiza tu enfoque con datos reales.</p>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon"><i class="fas fa-balance-scale"></i></div>
+                                <h3>Equilibrio Trabajo-Vida</h3>
+                                <p>Integra objetivos personales junto con profesionales para un tiempo de calidad.</p>
+                            </div>
+                        </div>
+                        <div class="slider-nav">
+                            <button class="slider-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <div class="slider-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <button class="slider-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="solucion" class="py-16 bg-green">
-            <div class="container mx-auto px-4">
-                <h2 class="text-3xl font-bold mb-8 text-center animate-slideInBottom">Nuestra Solución</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-white p-6 rounded-lg shadow-md animate-slideInLeft">
-                        <h3 class="text-xl font-semibold mb-4">Plataforma Intuitiva</h3>
-                        <ul class="list-disc pl-5">
-                            <li class="animate-fadeIn delay-100">Ingresa actividades y tareas fácilmente</li>
-                            <li class="animate-fadeIn delay-200">Visualiza tu calendario de forma clara</li>
-                            <li class="animate-fadeIn delay-300">Organiza por hora/día/semana/mes/año</li>
-                        </ul>
+        <section id="como-funciona" class="como-funciona">
+            <div class="container">
+                <h2>Cómo funciona TimeFlow</h2>
+                <div class="horizontal-timeline">
+                    <div class="timeline-track">
+                        <div class="timeline-item active" data-step="1">
+                            <div class="timeline-dot">1</div>
+                            <div class="timeline-content">
+                                <h3>Captura</h3>
+                                <p>Ingresa tus tareas, proyectos y compromisos en un solo lugar. Sin más notas dispersas.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item" data-step="2">
+                            <div class="timeline-dot">2</div>
+                            <div class="timeline-content">
+                                <h3>Clarifica</h3>
+                                <p>El asistente IA te ayuda a definir prioridades y dividir proyectos en pasos accionables.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item" data-step="3">
+                            <div class="timeline-dot">3</div>
+                            <div class="timeline-content">
+                                <h3>Organiza</h3>
+                                <p>Distribuye tu tiempo con bloques de enfoque profundo y descansos estratégicos.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item" data-step="4">
+                            <div class="timeline-dot">4</div>
+                            <div class="timeline-content">
+                                <h3>Ejecuta</h3>
+                                <p>Utiliza técnicas como Pomodoro o Flowtime para mantener el enfoque y evitar la procrastinación.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item" data-step="5">
+                            <div class="timeline-dot">5</div>
+                            <div class="timeline-content">
+                                <h3>Revisa</h3>
+                                <p>Analiza tu rendimiento y recibe recomendaciones personalizadas para mejorar continuamente.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md animate-slideInRight">
-                        <h3 class="text-xl font-semibold mb-4">IA Inteligente</h3>
-                        <ul class="list-disc pl-5">
-                            <li class="animate-fadeIn delay-100">Recomendaciones personalizadas</li>
-                            <li class="animate-fadeIn delay-200">Optimización de horarios</li>
-                            <li class="animate-fadeIn delay-300">Sugerencias de descanso (Pomodoro, 5 minutos)</li>
-                        </ul>
+                    <div class="timeline-nav">
+                        <button class="timeline-btn prev" disabled><i class="fas fa-chevron-left"></i></button>
+                        <div class="timeline-progress">
+                            <div class="progress-bar"></div>
+                        </div>
+                        <button class="timeline-btn next"><i class="fas fa-chevron-right"></i></button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="beneficios" class="py-16 bg-coral">
-            <div class="container mx-auto px-4">
-                <h2 class="text-3xl font-bold mb-8 text-center animate-slideInBottom">Beneficios</h2>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div class="bg-white p-4 rounded-lg shadow-md text-center animate-slideInBottom delay-100">
-                        <h3 class="text-lg font-semibold mb-2">Mayor Productividad</h3>
-                        <p>Optimiza tu tiempo y logra más en menos tiempo</p>
+        <section id="faq" class="faq">
+            <div class="container">
+                <h2>Preguntas frecuentes</h2>
+                <div class="faq-carousel">
+                    <div class="faq-slide active">
+                        <div class="faq-item active">
+                            <div class="faq-question">
+                                ¿En qué se diferencia TimeFlow de otras apps?
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>A diferencia de otras soluciones que solo ofrecen listas de tareas, TimeFlow integra planificación inteligente, análisis de productividad y técnicas científicamente probadas en un sistema completo.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-white p-4 rounded-lg shadow-md text-center animate-slideInBottom delay-200">
-                        <h3 class="text-lg font-semibold mb-2">Menos Estrés</h3>
-                        <p>Organiza tu vida y reduce la ansiedad</p>
+                    <div class="faq-slide">
+                        <div class="faq-item active">
+                            <div class="faq-question">
+                                ¿Cuánto tiempo se necesita para ver resultados?
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>La mayoría de nuestros usuarios reportan mejoras notables en su productividad durante la primera semana. Los beneficios completos se experimentan después de 21 días.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-white p-4 rounded-lg shadow-md text-center animate-slideInBottom delay-300">
-                        <h3 class="text-lg font-semibold mb-2">Mejor Balance</h3>
-                        <p>Encuentra tiempo para lo que realmente importa</p>
+                    <div class="faq-slide">
+                        <div class="faq-item active">
+                            <div class="faq-question">
+                                ¿Funciona en todos los dispositivos?
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Sí, TimeFlow está disponible como aplicación web, así como aplicaciones nativas para iOS y Android. Todos tus datos se sincronizan automáticamente entre dispositivos.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-white p-4 rounded-lg shadow-md text-center animate-slideInBottom delay-400">
-                        <h3 class="text-lg font-semibold mb-2">Crecimiento Personal</h3>
-                        <p>Desarrolla hábitos positivos y alcanza tus metas</p>
+                    <div class="faq-slide">
+                        <div class="faq-item active">
+                            <div class="faq-question">
+                                ¿Puedo probar TimeFlow antes de pagar?
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="faq-answer">
+                                <p>Absolutamente. Ofrecemos una prueba gratuita de 14 días con acceso completo a todas las funciones premium. No requerimos datos de pago para comenzar.</p>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                <div class="faq-nav">
+                    <button class="faq-btn prev"><i class="fas fa-chevron-left"></i></button>
+                    <div class="faq-dots">
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                    <button class="faq-btn next"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
         </section>
 
-        <section id="cta" class="py-20 bg-gray text-white text-center">
-            <div class="container mx-auto px-4">
-                <h2 class="text-4xl font-bold mb-6 animate-slideInBottom">¿Listo para dominar tu tiempo?</h2>
-                <p class="text-xl mb-8 animate-fadeIn delay-300">Únete a FlowTime hoy y transforma tu productividad</p>
-                <a href="register.php" class="btn btn-primary text-lg animate-pulse">Comienza Gratis</a>
+        <section id="cta" class="cta">
+            <div class="container">
+                <div class="cta-content">
+                    <h2>Recupera el control de tu tiempo hoy</h2>
+                    <p>Únete a miles de personas que ya han transformado su productividad</p>
+                    <div class="cta-buttons">
+                        <a href="register.php" class="btn btn-primary btn-lg">Comenzar Prueba Gratuita</a>
+                        <p class="cta-note">No se requiere tarjeta de crédito • Cancelación sencilla</p>
+                    </div>
+                </div>
+                <div class="cta-stats">
+                    <div class="stat">
+                        <div class="stat-number">25%</div>
+                        <p>Aumento en productividad</p>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">68%</div>
+                        <p>Reducción de estrés</p>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">2h+</div>
+                        <p>Tiempo recuperado al día</p>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
 
-    <footer class="bg-white py-8 animate-fadeIn">
-        <div class="container mx-auto px-4 text-center">
-            <p>&copy; 2024 FlowTime. Todos los derechos reservados.</p>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">
+                        <i class="fas fa-clock"></i>
+                        <span>TimeFlow</span>
+                    </a>
+                    <p>Domina tu tiempo, transforma tu vida</p>
+                </div>
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Producto</h4>
+                        <ul>
+                            <li><a href="#">Características</a></li>
+                            <li><a href="#">Precios</a></li>
+                        </ul>
+                    </div>
+                    <div class="link-group">
+                        <h4>Recursos</h4>
+                        <ul>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">Soporte</a></li>
+                        </ul>
+                    </div>
+                    <div class="link-group">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#">Términos</a></li>
+                            <li><a href="#">Privacidad</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TimeFlow. Todos los derechos reservados.</p>
+            </div>
         </div>
     </footer>
+
+    <button id="back-to-top" aria-label="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </button>
 
     <script src="includes/js/main.js"></script>
 </body>
