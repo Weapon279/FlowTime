@@ -13,6 +13,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../includes/css/dashboard.css">
+    <link rel="stylesheet" href="../includes/css/carga.css">
+
+
     <style>
         :root {
             --primary: #A3C9A8;
@@ -105,6 +109,30 @@
     </style>
 </head>
 <body>
+        <!-- Pantalla de carga modular -->
+<div class="loader-container" id="pageLoader">
+    <div class="loader-content">
+        <div class="clock-loader">
+            <div class="clock-face">
+                <div class="clock-center"></div>
+                <div class="clock-hour"></div>
+                <div class="clock-minute"></div>
+                <div class="clock-second"></div>
+                <div class="clock-marking marking-12"></div>
+                <div class="clock-marking marking-3"></div>
+                <div class="clock-marking marking-6"></div>
+                <div class="clock-marking marking-9"></div>
+            </div>
+        </div>
+        <div class="loader-text">
+            <h2>Cargando...</h2>
+            <div class="quote-container">
+                <p id="quoteText" class="quote-text"></p>
+                <p id="quoteAuthor" class="quote-author"></p>
+            </div>
+        </div>
+    </div>
+</div>
     <div class="dashboard">
         <aside class="sidebar">
             <div class="logo">
@@ -158,5 +186,7 @@
 
     </script>
         <script src="../includes/js/dashboard.js"></script>
+        <script src="../includes/js/carga.js"></script>
+
 </body>
 </html>

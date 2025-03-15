@@ -31,7 +31,7 @@ body {
     min-height: 100vh;
 }
 
-.sidebar {
+.sidebar2 {
     background-color: var(--surface);
     padding: 1.5rem;
     border-right: 1px solid var(--border);
@@ -200,7 +200,7 @@ body {
         grid-template-columns: 1fr;
     }
 
-    .sidebar {
+    .sidebar2 {
         display: none;
     }
 }

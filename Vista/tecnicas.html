@@ -12,27 +12,52 @@
     <link rel="stylesheet" href="../includes/css/dashboard.css">
     <link rel="stylesheet" href="../includes/css/tecnicas.css">
     <link rel="stylesheet" href="../includes/js/tecnicas.js">
+    <link rel="stylesheet" href="../includes/css/carga.css">
 
 </head>
 <body>
-    <div class="dashboard">
-        <aside class="sidebar">
-            <div class="logo">
-                <i class="fas fa-clock fa-2x" style="color: var(--primary);"></i>
-                <h1>TimeFlow</h1>
+    <!-- Pantalla de carga modular -->
+<div class="loader-container" id="pageLoader">
+    <div class="loader-content">
+        <div class="clock-loader">
+            <div class="clock-face">
+                <div class="clock-center"></div>
+                <div class="clock-hour"></div>
+                <div class="clock-minute"></div>
+                <div class="clock-second"></div>
+                <div class="clock-marking marking-12"></div>
+                <div class="clock-marking marking-3"></div>
+                <div class="clock-marking marking-6"></div>
+                <div class="clock-marking marking-9"></div>
             </div>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
-                    <li><a href="tareas.html"><i class="fas fa-tasks"></i> Tareas</a></li>
-                    <li><a href="calendario.html"><i class="fas fa-calendar"></i> Calendario</a></li>
-                    <li><a href="gantt.html"><i class="fas fa-project-diagram"></i> Gantt</a></li>
-                    <li><a href="tecnicas.html" class="active"><i class="fas fa-brain"></i> Técnicas</a></li>
-                    <li><a href="analisis.html"><i class="fas fa-chart-line"></i> Análisis</a></li>
-                    <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
-                </ul>
-            </nav>
-        </aside>
+        </div>
+        <div class="loader-text">
+            <h2>Cargando...</h2>
+            <div class="quote-container">
+                <p id="quoteText" class="quote-text"></p>
+                <p id="quoteAuthor" class="quote-author"></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="dashboard">
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-clock fa-2x" style="color: var(--primary);"></i>
+            <h1>TimeFlow</h1>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="tareas.html" ><i class="fas fa-tasks"></i> Tareas</a></li>
+                <li><a href="calendario.html"><i class="fas fa-calendar"></i> Calendario</a></li>
+                <li><a href="tecnicas.html" class="active"><i class="fas fa-brain"></i> Técnicas</a></li>
+                <li><a href="priorizacion-tareas.html"><i class="fas fa-sort-amount-up"></i> Priorización</a></li>
+                <li><a href="analisis.html"><i class="fas fa-chart-line"></i> Análisis</a></li>
+                <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+            </ul>
+        </nav>
+    </aside>
 
         <main class="main-content">
             <h1>Técnicas de Productividad</h1>
@@ -371,5 +396,6 @@
     </div>
 
     <script src="../includes/js/tecnicas.js"></script>
+    <script src="../includes/js/carga.js"></script>
 </body>
 </html>

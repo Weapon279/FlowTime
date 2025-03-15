@@ -1,0 +1,263 @@
+/* Estilos para la pantalla de carga */
+.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--background, #ffffff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+  }
+  
+  .loader-container.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+  
+  .loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 600px;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  /* Reloj animado */
+  .clock-loader {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  
+  .clock-face {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 4px solid var(--primary, #a3c9a8);
+    background-color: var(--background-alt, #f9f9f9);
+    box-shadow: 0 0 20px rgba(163, 201, 168, 0.3);
+    position: relative;
+  }
+  
+  .clock-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    background-color: var(--primary-dark, #8ab08f);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+  }
+  
+  .clock-hour,
+  .clock-minute,
+  .clock-second {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: center bottom;
+    border-radius: 10px;
+  }
+  
+  .clock-hour {
+    width: 4px;
+    height: 30px;
+    background-color: var(--text, #333333);
+    transform: translate(-50%, -100%) rotate(0deg);
+    z-index: 7;
+  }
+  
+  .clock-minute {
+    width: 3px;
+    height: 40px;
+    background-color: var(--text, #333333);
+    transform: translate(-50%, -100%) rotate(0deg);
+    z-index: 8;
+  }
+  
+  .clock-second {
+    width: 2px;
+    height: 45px;
+    background-color: var(--accent, #f5b7a5);
+    transform: translate(-50%, -100%) rotate(0deg);
+    z-index: 9;
+  }
+  
+  .clock-marking {
+    position: absolute;
+    width: 4px;
+    height: 12px;
+    background-color: var(--primary, #a3c9a8);
+    border-radius: 2px;
+  }
+  
+  .marking-12 {
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .marking-3 {
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%) rotate(90deg);
+  }
+  
+  .marking-6 {
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .marking-9 {
+    top: 50%;
+    left: 6px;
+    transform: translateY(-50%) rotate(90deg);
+  }
+  
+  /* Texto y citas */
+  .loader-text {
+    color: var(--text, #333333);
+  }
+  
+  .loader-text h2 {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--primary, #a3c9a8);
+  }
+  
+  .quote-container {
+    max-width: 500px;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .quote-text {
+    font-family: "Nunito", sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+    font-style: italic;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  
+  .quote-text.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .quote-author {
+    font-family: "Poppins", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-light, #6d8299);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transition-delay: 0.2s;
+  }
+  
+  .quote-author.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Tema oscuro */
+  [data-theme="dark"] .clock-face {
+    background-color: var(--surface, #2d3748);
+    border-color: var(--primary, #a3c9a8);
+  }
+  
+  /* Animaciones */
+  @keyframes rotateHour {
+    0% {
+      transform: translate(-50%, -100%) rotate(0deg);
+    }
+    100% {
+      transform: translate(-50%, -100%) rotate(360deg);
+    }
+  }
+  
+  @keyframes rotateMinute {
+    0% {
+      transform: translate(-50%, -100%) rotate(0deg);
+    }
+    100% {
+      transform: translate(-50%, -100%) rotate(360deg);
+    }
+  }
+  
+  @keyframes rotateSecond {
+    0% {
+      transform: translate(-50%, -100%) rotate(0deg);
+    }
+    100% {
+      transform: translate(-50%, -100%) rotate(360deg);
+    }
+  }
+  
+  .clock-hour {
+    animation: rotateHour 8s linear infinite;
+  }
+  
+  .clock-minute {
+    animation: rotateMinute 4s linear infinite;
+  }
+  
+  .clock-second {
+    animation: rotateSecond 2s linear infinite;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .loader-content {
+      padding: 1.5rem;
+    }
+  
+    .clock-loader {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 1.5rem;
+    }
+  
+    .quote-text {
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .loader-content {
+      padding: 1rem;
+    }
+  
+    .clock-loader {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 1rem;
+    }
+  
+    .quote-text {
+      font-size: 0.9rem;
+    }
+  
+    .quote-author {
+      font-size: 0.8rem;
+    }
+  }
+  
+  
