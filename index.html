@@ -9,7 +9,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="includes/css/estilo.css">
     <link rel="stylesheet" href="includes/css/animacion.css">
-    <link rel="icon" href="includes/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="includes/img/logo.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="includes/css/carga.css">
+
     <!-- Open Graph tags -->
     <meta property="og:title" content="TimeFlow - Recupera el control de tu tiempo">
     <meta property="og:description" content="Plataforma inteligente para gestionar tu tiempo y aumentar tu productividad">
@@ -18,6 +20,30 @@
     <meta property="og:type" content="website">
 </head>
 <body>
+        <!-- Pantalla de carga modular -->
+<div class="loader-container" id="pageLoader">
+    <div class="loader-content">
+        <div class="clock-loader">
+            <div class="clock-face">
+                <div class="clock-center"></div>
+                <div class="clock-hour"></div>
+                <div class="clock-minute"></div>
+                <div class="clock-second"></div>
+                <div class="clock-marking marking-12"></div>
+                <div class="clock-marking marking-3"></div>
+                <div class="clock-marking marking-6"></div>
+                <div class="clock-marking marking-9"></div>
+            </div>
+        </div>
+        <div class="loader-text">
+            <h2>Cargando...</h2>
+            <div class="quote-container">
+                <p id="quoteText" class="quote-text"></p>
+                <p id="quoteAuthor" class="quote-author"></p>
+            </div>
+        </div>
+    </div>
+</div>
     <header class="header">
         <div class="container">
             <nav class="navbar">
@@ -35,8 +61,8 @@
                     <li><a href="#solucion" class="nav-link">Solución</a></li>
                     <li><a href="#como-funciona" class="nav-link">Cómo Funciona</a></li>
                     <li><a href="#faq" class="nav-link">FAQ</a></li>
-                    <li><a href="login.php" class="btn btn-outline">Iniciar Sesión</a></li>
-                    <li><a href="register.php" class="btn btn-primary">Prueba Gratis</a></li>
+                    <li><a href="login.html" class="btn btn-outline">Iniciar Sesión</a></li>
+                    <li><a href="login.html" class="btn btn-primary">Prueba Gratis</a></li>
                 </ul>
             </nav>
         </div>
@@ -54,7 +80,7 @@
                     </div>
                 </div>
                 <div class="hero-image">
-                    <img src="includes/img/dash.png" alt="Dashboard de TimeFlow mostrando gestión de tiempo" class="dashboard-preview">
+                    <img src="includes/img/dash.png" alt="Dashboard de FlowTime mostrando gestión de tiempo" class="dashboard-preview">
                 </div>
             </div>
         </section>
@@ -132,7 +158,7 @@
 
         <section id="como-funciona" class="como-funciona">
             <div class="container">
-                <h2>Cómo funciona TimeFlow</h2>
+                <h2>Cómo funciona FlowTime</h2>
                 <div class="horizontal-timeline">
                     <div class="timeline-track">
                         <div class="timeline-item active" data-step="1">
@@ -189,11 +215,11 @@
                     <div class="faq-slide active">
                         <div class="faq-item active">
                             <div class="faq-question">
-                                ¿En qué se diferencia TimeFlow de otras apps?
+                                ¿En qué se diferencia FlowTime de otras apps?
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                             <div class="faq-answer">
-                                <p>A diferencia de otras soluciones que solo ofrecen listas de tareas, TimeFlow integra planificación inteligente, análisis de productividad y técnicas científicamente probadas en un sistema completo.</p>
+                                <p>A diferencia de otras soluciones que solo ofrecen listas de tareas, FlowTime integra planificación inteligente, análisis de productividad y técnicas científicamente probadas en un sistema completo.</p>
                             </div>
                         </div>
                     </div>
@@ -215,14 +241,14 @@
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                             <div class="faq-answer">
-                                <p>Sí, TimeFlow está disponible como aplicación web, así como aplicaciones nativas para iOS y Android. Todos tus datos se sincronizan automáticamente entre dispositivos.</p>
+                                <p>Sí, FlowTime está disponible como aplicación web, así como aplicaciones nativas para iOS y Android. Todos tus datos se sincronizan automáticamente entre dispositivos.</p>
                             </div>
                         </div>
                     </div>
                     <div class="faq-slide">
                         <div class="faq-item active">
                             <div class="faq-question">
-                                ¿Puedo probar TimeFlow antes de pagar?
+                                ¿Puedo probar FlowTime antes de pagar?
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                             <div class="faq-answer">
@@ -278,7 +304,7 @@
                 <div class="footer-brand">
                     <a href="index.html" class="footer-logo">
                         <i class="fas fa-clock"></i>
-                        <span>TimeFlow</span>
+                        <span>FlowTime</span>
                     </a>
                     <p>Domina tu tiempo, transforma tu vida</p>
                 </div>
@@ -313,7 +339,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 TimeFlow. Todos los derechos reservados.</p>
+                <p>&copy; 2024 FlowTime. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
@@ -323,5 +349,7 @@
     </button>
 
     <script src="includes/js/main.js"></script>
+    <script src="includes/js/carga.js"></script>
+
 </body>
 </html>
