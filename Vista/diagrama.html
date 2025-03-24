@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Priorización de Tareas - TimeFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../includes/css/dashboard.css">
+    <link rel="stylesheet" href="../includes/css/diagrama.css">
+    <link rel="stylesheet" href="../includes/css/carga.css">
+</head>
+<body>
+    <!-- Pantalla de carga modular -->
+<div class="loader-container" id="pageLoader">
+    <div class="loader-content">
+        <div class="clock-loader">
+            <div class="clock-face">
+                <div class="clock-center"></div>
+                <div class="clock-hour"></div>
+                <div class="clock-minute"></div>
+                <div class="clock-second"></div>
+                <div class="clock-marking marking-12"></div>
+                <div class="clock-marking marking-3"></div>
+                <div class="clock-marking marking-6"></div>
+                <div class="clock-marking marking-9"></div>
+            </div>
+        </div>
+        <div class="loader-text">
+            <h2>Cargando...</h2>
+            <div class="quote-container">
+                <p id="quoteText" class="quote-text"></p>
+                <p id="quoteAuthor" class="quote-author"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-clock fa-2x" style="color: var(--primary);"></i>
+                <h1>TimeFlow</h1>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="tareas.html"><i class="fas fa-tasks"></i> Tareas</a></li>
+                    <li><a href="calendario.html"><i class="fas fa-calendar"></i> Calendario</a></li>
+                    <li><a href="gantt.html"><i class="fas fa-project-diagram"></i> Gantt</a></li>
+                    <li><a href="tecnicas.html"><i class="fas fa-brain"></i> Técnicas</a></li>
+                    <li><a href="proyectos.html"><i class="fas fa-folder-open"></i> Proyectos</a></li>
+                    <li><a href="priorizacion-tareas.html" class="active"><i class="fas fa-sort-amount-up"></i> Priorización</a></li>
+                    <li><a href="analisis.html"><i class="fas fa-chart-line"></i> Análisis</a></li>
+                    <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h1 class="slide-in">Priorización de Tareas</h1>
+            
+            <div class="auto-prioritize slide-in">
+                <button id="autoPrioritizeBtn" class="btn btn-primary">Auto-priorizar Tareas</button>
+            </div>
+
+            <h2 class="slide-in">Matriz de Eisenhower</h2>
+            <div class="eisenhower-matrix">
+                <div id="urgentImportant" class="matrix-quadrant urgent-important" ondragover="allowDrop(event)" ondrop="drop(event, 'urgentImportant')">
+                    <h3>Urgente e Importante</h3>
+                </div>
+                <div id="importantNotUrgent" class="matrix-quadrant important" ondragover="allowDrop(event)" ondrop="drop(event, 'importantNotUrgent')">
+                    <h3>Importante, No Urgente</h3>
+                </div>
+                <div id="urgentNotImportant" class="matrix-quadrant urgent" ondragover="allowDrop(event)" ondrop="drop(event, 'urgentNotImportant')">
+                    <h3>Urgente, No Importante</h3>
+                </div>
+                <div id="notUrgentNotImportant" class="matrix-quadrant" ondragover="allowDrop(event)" ondrop="drop(event, 'notUrgentNotImportant')">
+                    <h3>Ni Urgente Ni Importante</h3>
+                </div>
+            </div>
+
+            <h2 class="slide-in">Todas las Tareas</h2>
+            <ul id="allTasks" class="task-list"></ul>
+        </main>
+    </div>
+
+    <script src="../includes/js/diagrama.js"></script>
+    <script src="../includes/js/carga.js"></script>
+</body>
+</html>
+

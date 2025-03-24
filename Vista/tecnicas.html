@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Técnicas de Productividad - TimeFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../includes/css/tecnicas.css">
+    <link rel="stylesheet" href="../includes/js/tecnicas.js">
+    <link rel="stylesheet" href="../includes/css/carga.css">
+</head>
+<style>
+     :root {
+            --primary: #A3C9A8;
+            --primary-light: #BFD7EA;
+            --secondary: #F5B7A5;
+            --accent: #F4EAE0;
+            --background: #FFFFFF;
+            --surface: #F4EAE0;
+            --text: #333333;
+            --text-light: #6D8299;
+            --border: #BFD7EA;
+            --success: #A3C9A8;
+            --warning: #F5B7A5;
+            --danger: #FF6B6B;
+            --info: #4ECDC4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background-color: var(--surface);
+            padding: 1.5rem;
+            border-right: 1px solid var(--border);
+            animation: slideIn 0.5s ease-out;
+            z-index: 10;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            text-decoration: none;
+            color: var(--text);
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background-color: var(--primary);
+            color: var(--background);
+        }
+
+        .main-content {
+            padding: 1.5rem;
+            animation: fadeIn 0.5s ease-out;
+            overflow-x: hidden;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: var(--primary);
+            color: var(--background);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .calendar {
+            background-color: var(--surface);
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .calendar-body {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.25rem;
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-weight: bold;
+            color: var(--text-light);
+            font-size: 0.8rem;
+            padding: 0.25rem;
+        }
+
+        .calendar-day {
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.25rem;
+            background-color: var(--background);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calendar-day:hover {
+            background-color: var(--primary-light);
+        }
+
+        .calendar-day.active {
+            background-color: rgba(163, 201, 168, 0.1);
+        }
+
+        .calendar-day.today {
+            border: 2px solid var(--primary);
+        }
+
+        .calendar-day.other-month {
+            color: var(--text-light);
+            background-color: rgba(244, 234, 224, 0.5);
+        }
+
+        .day-number {
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+            text-align: center;
+        }
+
+        .day-events {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+            overflow-y: auto;
+            font-size: 0.7rem;
+            max-height: calc(100% - 1.5rem);
+            scrollbar-width: thin;
+        }
+
+        .day-events::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .day-events::-webkit-scrollbar-thumb {
+            background-color: var(--primary-light);
+            border-radius: 4px;
+        }
+
+        .day-event {
+            padding: 0.15rem 0.25rem;
+            border-radius: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: white;
+            font-weight: 500;
+        }
+
+        .day-event.work {
+            background-color: var(--warning);
+        }
+
+        .day-event.personal {
+            background-color: var(--success);
+        }
+
+        .event-list {
+            margin-top: 1.5rem;
+        }
+
+        .event-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .event-list-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .event-filters {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.25rem 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 0.25rem;
+            background-color: var(--background);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .event-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .event-item {
+            background-color: var(--surface);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            animation: slideUp 0.3s ease-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .event-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .event-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .event-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .event-type {
+            font-size: 0.8rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 1rem;
+            color: white;
+            font-weight: 500;
+        }
+
+        .event-type.work {
+            background-color: var(--warning);
+        }
+
+        .event-type.personal {
+            background-color: var(--success);
+        }
+
+        .event-datetime {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .event-description {
+            font-size: 0.9rem;
+            color: var(--text);
+            margin-top: 0.5rem;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        .event-action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+            padding: 0.25rem;
+        }
+
+        .event-action-btn:hover {
+            color: var(--primary);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: var(--background);
+            margin: 5% auto;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 500px;
+            animation: modalSlideDown 0.3s ease-out;
+            position: relative;
+        }
+
+        @keyframes modalSlideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+        }
+
+        .modal-body {
+            margin-bottom: 1rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 0.25rem;
+            font-family: 'Nunito', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary);
+            color: var(--background);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            animation: notificationSlideUp 0.3s ease-out;
+            max-width: 300px;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .notification-icon {
+            font-size: 1.2rem;
+            margin-top: 0.1rem;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-message {
+            font-size: 0.9rem;
+        }
+
+        .notification-close {
+            font-size: 1rem;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            transition: color 0.3s ease;
+        }
+
+        .notification-close:hover {
+            color: white;
+        }
+
+        @keyframes notificationSlideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .view-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .view-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            background-color: var(--background);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .view-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .upcoming-events {
+            background-color: var(--surface);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .upcoming-events-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .upcoming-events-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .upcoming-events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .upcoming-event {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background-color: var(--background);
+            transition: transform 0.3s ease;
+        }
+
+        .upcoming-event:hover {
+            transform: translateX(5px);
+        }
+
+        .upcoming-event-icon {
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .upcoming-event-info {
+            flex: 1;
+        }
+
+        .upcoming-event-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .upcoming-event-time {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .upcoming-event-countdown {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.15rem 0.5rem;
+            border-radius: 1rem;
+            background-color: var(--primary-light);
+            color: var(--text);
+        }
+
+        @media (max-width: 1024px) {
+            .calendar-day {
+                min-height: 70px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                top: 0;
+                height: 100%;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .calendar-day {
+                min-height: 60px;
+            }
+
+            .day-number {
+                font-size: 0.8rem;
+            }
+
+            .day-event {
+                font-size: 0.65rem;
+                padding: 0.1rem 0.2rem;
+            }
+
+            .event-items {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .calendar-weekday {
+                font-size: 0.7rem;
+            }
+
+            .calendar-day {
+                min-height: 50px;
+            }
+
+            .day-number {
+                font-size: 0.7rem;
+            }
+
+            .day-event {
+                font-size: 0.6rem;
+                padding: 0.05rem 0.15rem;
+            }
+
+            .event-filters {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Overlay para cuando el sidebar está activo en móvil */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 5;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+</style>
+<body>
+    <!-- Pantalla de carga modular -->
+<div class="loader-container" id="pageLoader">
+    <div class="loader-content">
+        <div class="clock-loader">
+            <div class="clock-face">
+                <div class="clock-center"></div>
+                <div class="clock-hour"></div>
+                <div class="clock-minute"></div>
+                <div class="clock-second"></div>
+                <div class="clock-marking marking-12"></div>
+                <div class="clock-marking marking-3"></div>
+                <div class="clock-marking marking-6"></div>
+                <div class="clock-marking marking-9"></div>
+            </div>
+        </div>
+        <div class="loader-text">
+            <h2>Cargando...</h2>
+            <div class="quote-container">
+                <p id="quoteText" class="quote-text"></p>
+                <p id="quoteAuthor" class="quote-author"></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="dashboard">
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-clock fa-2x" style="color: var(--primary);"></i>
+            <h1>TimeFlow</h1>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="tareas.html" ><i class="fas fa-tasks"></i> Tareas</a></li>
+                <li><a href="calendario.html"><i class="fas fa-calendar"></i> Calendario</a></li>
+                <li><a href="tecnicas.html" class="active"><i class="fas fa-brain"></i> Técnicas</a></li>
+                <li><a href="priorizacion-tareas.html"><i class="fas fa-sort-amount-up"></i> Priorización</a></li>
+                <li><a href="analisis.html"><i class="fas fa-chart-line"></i> Análisis</a></li>
+                <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+        <main class="main-content">
+            <h1>Técnicas de Productividad</h1>
+            
+            <!-- Menú principal: Selección de tipo de tarea -->
+            <div id="taskTypeSelection" class="task-type-selection">
+                <div class="task-type-card" onclick="selectTaskType('daily')">
+                    <i class="fas fa-calendar-day"></i>
+                    <h3>Tareas Diarias</h3>
+                    <p>Utiliza Pomodoro o Flowtime para gestionar tus tareas del día a día.</p>
+                </div>
+                <div class="task-type-card" onclick="selectTaskType('goals')">
+                    <i class="fas fa-bullseye"></i>
+                    <h3>Metas y Objetivos</h3>
+                    <p>Utiliza Time Boxing para asignar bloques de tiempo específicos a tus metas y objetivos.</p>
+                </div>
+            </div>
+
+            <!-- Sección de consejos e información -->
+            <div class="tips-section">
+                <div class="tips-header" onclick="toggleTips()">
+                    <i class="fas fa-lightbulb"></i>
+                    <h2>Consejos e Información</h2>
+                </div>
+                <div class="tips-content" id="tipsContent">
+                    <div class="technique-tabs">
+                        <div class="technique-tab active" onclick="showTechniqueInfo('pomodoro-tab')">Pomodoro</div>
+                        <div class="technique-tab" onclick="showTechniqueInfo('flowtime-tab')">Flowtime</div>
+                        <div class="technique-tab" onclick="showTechniqueInfo('timeboxing-tab')">Time Boxing</div>
+                    </div>
+
+                    <div class="technique-content active" id="pomodoro-tab">
+                        <h3>Técnica Pomodoro</h3>
+                        <p>Desarrollada por Francesco Cirillo a finales de los años 80, la técnica Pomodoro es un método de gestión del tiempo que utiliza intervalos de trabajo cronometrados, tradicionalmente de 25 minutos, seguidos de breves descansos.</p>
+                        
+                        <div class="tip-card">
+                            <h4>¿Cómo funciona?</h4>
+                            <ol>
+                                <li><strong>Planifica:</strong> Decide qué tarea vas a realizar.</li>
+                                <li><strong>Configura:</strong> Ajusta un temporizador a 25 minutos (un "pomodoro").</li>
+                                <li><strong>Trabaja:</strong> Concéntrate exclusivamente en esa tarea hasta que suene el temporizador.</li>
+                                <li><strong>Descansa:</strong> Toma un descanso corto de 5 minutos.</li>
+                                <li><strong>Repite:</strong> Después de 4 pomodoros, toma un descanso más largo de 15-30 minutos.</li>
+                            </ol>
+                        </div>
+
+                        <div class="tip-card">
+                            <h4>Beneficios</h4>
+                            <ul>
+                                <li>Reduce la fatiga mental al dividir el trabajo en intervalos manejables.</li>
+                                <li>Minimiza las interrupciones y mejora la concentración.</li>
+                                <li>Aumenta la conciencia del tiempo y mejora la estimación de tareas.</li>
+                                <li>Combate la procrastinación al hacer que sea más fácil comenzar.</li>
+                            </ul>
+                        </div>
+
+                        <div class="tip-card">
+                            <h4>Consejos prácticos</h4>
+                            <ul>
+                                <li>Ajusta la duración de los intervalos según tus necesidades (algunos prefieren 30 o 45 minutos).</li>
+                                <li>Durante un pomodoro, anota cualquier distracción que surja para abordarla después.</li>
+                                <li>Si terminas una tarea antes de que acabe el pomodoro, usa el tiempo restante para revisar o mejorar tu trabajo.</li>
+                                <li>Comunica a tus compañeros cuando estás en un pomodoro para evitar interrupciones.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="technique-content" id="flowtime-tab">
+                        <h3>Técnica Flowtime</h3>
+                        <p>La técnica Flowtime es una adaptación más flexible de Pomodoro que respeta tu estado de concentración natural o "flow". En lugar de interrumpir tu trabajo con descansos programados, te permite trabajar mientras estés concentrado y descansar cuando lo necesites.</p>
+                        
+                        <div class="tip-card">
+                            <h4>¿Cómo funciona?</h4>
+                            <ol>
+                                <li><strong>Selecciona:</strong> Elige una tarea específica para trabajar.</li>
+                                <li><strong>Registra:</strong> Anota la hora de inicio.</li>
+                                <li><strong>Trabaja:</strong> Concéntrate en la tarea hasta que sientas que necesitas un descanso.</li>
+                                <li><strong>Descansa:</strong> Toma un descanso proporcional al tiempo trabajado (aproximadamente 1/5 del tiempo de trabajo).</li>
+                                <li><strong>Documenta:</strong> Registra cuánto tiempo trabajaste y descansaste.</li>
+                            </ol>
+                        </div>
+
+                        <div class="tip-card">
+                            <h4>Beneficios</h4>
+                            <ul>
+                                <li>Respeta tu ritmo natural de concentración y energía.</li>
+                                <li>Evita interrumpir el "flow" cuando estás profundamente concentrado.</li>
+                                <li>Proporciona flexibilidad para diferentes tipos de tareas.</li>
+                                <li>Te ayuda a entender tus patrones personales de productividad.</li>
+                            </ul>
+                        </div>
+
+                        <div class="tip-card">
+                            <h4>Consejos prácticos</h4>
+                            <ul>
+                                <li>Lleva un registro de tus sesiones para identificar patrones (cuándo eres más productivo, qué tareas requieren más concentración, etc.).</li>
+                                <li>Si te distraes fácilmente, comienza con sesiones más cortas e incrementa gradualmente.</li>
+                                <li>Establece un límite máximo de tiempo de trabajo (por ejemplo, 90 minutos) para evitar el agotamiento.</li>
+                                <li>Usa la proporción 5:1 como guía para los descansos (por cada 25 minutos de trabajo, 5 minutos de descanso).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="technique-content" id="timeboxing-tab">
+                        <h3>Técnica Time Boxing</h3>
+                        <p>Time Boxing es una técnica de gestión del tiempo que consiste en asignar bloques de tiempo fijos ("cajas de tiempo") a actividades específicas. Es especialmente útil para proyectos grandes, metas a largo plazo y para combatir la ley de Parkinson (el trabajo se expande para llenar el tiempo disponible).</p>
+                        
+                        <div class="tip-card">
+                            <h4>¿Cómo funciona?</h4>
+                            <ol>
+                                <li><strong>Planifica:</strong> Identifica las tareas o actividades que necesitas realizar.</li>
+                                <li><strong>Asigna:</strong> Determina cuánto tiempo dedicarás a cada tarea.</li>
+                                <li><strong>Programa:</strong> Coloca estos bloques de tiempo en tu calendario.</li>
+                                <li><strong>Ejecuta:</strong> Trabaja exclusivamente en la tarea asignada durante ese tiempo.</li>
+                                <li><strong>Evalúa:</strong> Al final del bloque, evalúa tu progreso y ajusta según sea necesario.</li>
+                            </ol>
+                        </div>
+
+                        <div class="tip-card">
+                            <h4>Beneficios</h4>
+                            <ul>
+                                <li>Evita que las tareas se extiendan indefinidamente.</li>
+                                <li>Proporciona estructura y claridad a tu día.</li>
+                                <li>Facilita la priorización de tareas importantes.</li>
+                                <li>Mejora la estimación de tiempo para proyectos futuros.</li>
+                                <li>Reduce la procrastinación al establecer plazos claros.</li>
+                            </ul>
+                        </div>
+
+                        <div class="tip-card">
+                            <h4>Consejos prácticos</h4>
+                            <ul>
+                                <li>Sé realista con tus estimaciones de tiempo (es mejor sobreestimar que subestimar).</li>
+                                <li>Incluye "buffers" entre bloques para manejar imprevistos.</li>
+                                <li>Combina Time Boxing con la técnica Pomodoro para tareas más largas.</li>
+                                <li>Reserva bloques específicos para tareas creativas cuando tu energía esté en su punto máximo.</li>
+                                <li>Programa bloques para revisar y ajustar tus planes regularmente.</li>
+                            </ul>
+                        </div>
+
+                        <div class="tip-card">
+                            <h4>Aplicaciones ideales</h4>
+                            <ul>
+                                <li>Proyectos complejos que requieren avances constantes.</li>
+                                <li>Metas a largo plazo que necesitan atención regular.</li>
+                                <li>Tareas que tienden a expandirse indefinidamente.</li>
+                                <li>Equilibrar múltiples responsabilidades o proyectos.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gestión de tareas diarias -->
+            <div id="dailyTasksSection" class="technique-info">
+                <div class="back-button" onclick="backToMainMenu()">
+                    <i class="fas fa-arrow-left"></i> Volver al menú principal
+                </div>
+                <div class="section-title">
+                    <h2>Tareas Diarias</h2>
+                </div>
+                
+                <div class="task-form">
+                    <input type="text" id="dailyTaskInput" placeholder="Agregar nueva tarea diaria">
+                    <button class="btn" onclick="addDailyTask()">Agregar</button>
+                </div>
+                
+                <div id="dailyTaskList" class="task-list"></div>
+                
+                <div id="dailyTaskEditForm" class="edit-form">
+                    <h3>Editar Tarea</h3>
+                    <input type="text" id="editDailyTaskInput">
+                    <input type="hidden" id="editDailyTaskId">
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                        <button class="btn" onclick="updateDailyTask()">Guardar</button>
+                        <button class="btn btn-secondary" onclick="cancelEditDailyTask()">Cancelar</button>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    <button class="btn" onclick="showQuestionnaire()">Elegir Técnica</button>
+                </div>
+            </div>
+
+            <!-- Gestión de metas y objetivos -->
+            <div id="goalsTasksSection" class="technique-info">
+                <div class="back-button" onclick="backToMainMenu()">
+                    <i class="fas fa-arrow-left"></i> Volver al menú principal
+                </div>
+                <div class="section-title">
+                    <h2>Metas y Objetivos</h2>
+                </div>
+                
+                <div class="task-form">
+                    <input type="text" id="goalTaskInput" placeholder="Agregar nueva meta u objetivo">
+                    <button class="btn" onclick="addGoalTask()">Agregar</button>
+                </div>
+                
+                <div id="goalTaskList" class="task-list"></div>
+                
+                <div id="goalTaskEditForm" class="edit-form">
+                    <h3>Editar Meta/Objetivo</h3>
+                    <input type="text" id="editGoalTaskInput">
+                    <input type="hidden" id="editGoalTaskId">
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                        <button class="btn" onclick="updateGoalTask()">Guardar</button>
+                        <button class="btn btn-secondary" onclick="cancelEditGoalTask()">Cancelar</button>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    <button class="btn" onclick="showTimeBoxing()">Usar Time Boxing</button>
+                </div>
+            </div>
+
+            <!-- Cuestionario para tareas diarias (Pomodoro/Flowtime) -->
+            <div class="questionnaire" id="questionnaire" style="display: none;">
+                <div class="back-button" onclick="backToDailyTasks()">
+                    <i class="fas fa-arrow-left"></i> Volver  onclick="backToDailyTasks()">
+                    <i class="fas fa-arrow-left"></i> Volver a tareas diarias
+                </div>
+                <h2>Encuentra tu técnica ideal</h2>
+                <div class="question" style="animation-delay: 0.2s;">
+                    <h3>¿Cómo prefieres estructurar tu tiempo de trabajo?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="time_structure" id="fixed" value="fixed">
+                            <label for="fixed">Prefiero intervalos fijos y estructurados</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="time_structure" id="flexible" value="flexible">
+                            <label for="flexible">Prefiero flexibilidad según mi concentración</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" style="animation-delay: 0.4s;">
+                    <h3>¿Cómo manejas mejor las interrupciones?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="interruptions" id="scheduled" value="scheduled">
+                            <label for="scheduled">Prefiero descansos programados</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="interruptions" id="natural" value="natural">
+                            <label for="natural">Prefiero tomar descansos cuando los necesito</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question" style="animation-delay: 0.6s;">
+                    <h3>¿Qué tipo de tareas realizas principalmente?</h3>
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" name="task_type" id="focused" value="focused">
+                            <label for="focused">Tareas que requieren concentración intensa</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="task_type" id="creative" value="creative">
+                            <label for="creative">Tareas creativas o que fluyen naturalmente</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="analyzeTechnique()">Encontrar mi técnica</button>
+            </div>
+
+            <!-- Time Boxing -->
+            <div id="timeboxing" class="technique-info" style="display: none;">
+                <div class="back-button" onclick="backToGoalTasks()">
+                    <i class="fas fa-arrow-left"></i> Volver a metas y objetivos
+                </div>
+                <h2>Técnica Time Boxing</h2>
+                <p>Time Boxing es una técnica de gestión del tiempo que consiste en asignar bloques de tiempo fijos a actividades específicas. Esto te ayuda a mantener el enfoque, evitar la procrastinación y hacer un seguimiento de tu progreso hacia tus metas y objetivos.</p>
+                
+                <div class="technique-steps">
+                    <div class="technique-step">
+                        <i class="fas fa-list-ol"></i>
+                        <p>Define tus metas y objetivos</p>
+                    </div>
+                    <div class="technique-step">
+                        <i class="fas fa-tasks"></i>
+                        <p>Divide en tareas específicas</p>
+                    </div>
+                    <div class="technique-step">
+                        <i class="fas fa-clock"></i>
+                        <p>Asigna bloques de tiempo</p>
+                    </div>
+                    <div class="technique-step">
+                        <i class="fas fa-check-double"></i>
+                        <p>Completa cada bloque sin distracciones</p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem;">Selecciona una meta/objetivo</h3>
+                <div id="goalTaskSelection" class="task-list"></div>
+
+                <div id="selectedGoalInfo" class="current-task-info" style="display: none;">
+                    <h3>Meta/Objetivo seleccionado:</h3>
+                    <p id="selectedGoalName"></p>
+                </div>
+
+                <h3 style="margin-top: 2rem;">Configura tu Time Box</h3>
+                <div class="timebox-form">
+                    <input type="number" id="timeboxDuration" placeholder="Duración (minutos)" min="5" max="180" required>
+                    <button class="btn" onclick="startTimeBoxing()">Comenzar Time Boxing</button>
+                </div>
+            </div>
+
+            <!-- Información de técnica seleccionada -->
+            <div class="technique-info" id="techniqueInfo">
+                <!-- El contenido se llenará dinámicamente -->
+            </div>
+        </main>
+    </div>
+
+    <div class="timer-modal" id="timerModal">
+        <div class="timer-content">
+            <h2 id="timerTitle">Tiempo de trabajo</h2>
+            <div id="currentTaskInfo" class="current-task-info">
+                <h3>Tarea actual:</h3>
+                <p id="currentTaskName"></p>
+            </div>
+            <div class="timer-display" id="timerDisplay">25:00</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="timer-controls">
+                <button class="btn" id="startTimer">Iniciar</button>
+                <button class="btn btn-secondary" id="pauseTimer" style="display: none;">Pausar</button>
+                <button class="btn" id="resumeTimer" style="display: none;">Reanudar</button>
+                <button class="btn btn-secondary" id="completeTaskBtn" style="display: none;">Completar Tarea</button>
+                <button class="btn btn-outline" id="cancelTimer">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../includes/js/tecnicas.js"></script>
+    <script src="../includes/js/carga.js"></script>
+</body>
+</html>

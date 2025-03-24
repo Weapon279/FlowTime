@@ -1,0 +1,2045 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis - TimeFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../includes/css/carga.css">
+    
+    <!-- Highcharts Library -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+    <script src="../includes/js/carga.js"></script>
+    
+    <style>
+        :root {
+            --primary: #A3C9A8;
+            --primary-light: #BFD7EA;
+            --secondary: #F5B7A5;
+            --accent: #F4EAE0;
+            --background: #FFFFFF;
+            --surface: #F4EAE0;
+            --text: #333333;
+            --text-light: #6D8299;
+            --border: #BFD7EA;
+            --success: #A3C9A8;
+            --warning: #F5B7A5;
+            --danger: #FF6B6B;
+            --info: #4ECDC4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--surface);
+            padding: 1.5rem;
+            border-right: 1px solid var(--border);
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--surface);
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container {
+            background-color: var(--surface);
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-container h3 {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .chart-wrapper {
+            flex-grow: 1;
+            position: relative;
+            min-height: 250px;
+        }
+
+        .recommendations {
+            background-color: var(--surface);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: var(--background);
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .recommendation-item:hover {
+            transform: translateX(5px);
+        }
+
+        .recommendation-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background-color: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-value {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 0.5rem 0.5rem 0 0;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background-color: var(--primary-light);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .goal-card {
+            background-color: var(--surface);
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .goal-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .goal-card h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .goal-card .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .technique-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .technique-card {
+            background-color: var(--surface);
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .technique-card h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .technique-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .technique-stat {
+            text-align: center;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background-color: var(--background);
+        }
+
+        .technique-stat .value {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .technique-stat .label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .completed {
+            color: var(--success);
+        }
+
+        .partial {
+            color: var(--warning);
+        }
+
+        .not-started {
+            color: var(--danger);
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: var(--primary);
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        select.btn {
+            appearance: none;
+            padding-right: 2rem;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white' width='18px' height='18px'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .header-controls {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .technique-stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        :root {
+            --primary: #A3C9A8;
+            --primary-light: #BFD7EA;
+            --secondary: #F5B7A5;
+            --accent: #F4EAE0;
+            --background: #FFFFFF;
+            --surface: #F4EAE0;
+            --text: #333333;
+            --text-light: #6D8299;
+            --border: #BFD7EA;
+            --success: #A3C9A8;
+            --warning: #F5B7A5;
+            --danger: #FF6B6B;
+            --info: #4ECDC4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background-color: var(--surface);
+            padding: 1.5rem;
+            border-right: 1px solid var(--border);
+            animation: slideIn 0.5s ease-out;
+            z-index: 10;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            text-decoration: none;
+            color: var(--text);
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background-color: var(--primary);
+            color: var(--background);
+        }
+
+        .main-content {
+            padding: 1.5rem;
+            animation: fadeIn 0.5s ease-out;
+            overflow-x: hidden;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            background-color: var(--primary);
+            color: var(--background);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .calendar {
+            background-color: var(--surface);
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .calendar-body {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.25rem;
+        }
+
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            font-weight: bold;
+            color: var(--text-light);
+            font-size: 0.8rem;
+            padding: 0.25rem;
+        }
+
+        .calendar-day {
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.25rem;
+            background-color: var(--background);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calendar-day:hover {
+            background-color: var(--primary-light);
+        }
+
+        .calendar-day.active {
+            background-color: rgba(163, 201, 168, 0.1);
+        }
+
+        .calendar-day.today {
+            border: 2px solid var(--primary);
+        }
+
+        .calendar-day.other-month {
+            color: var(--text-light);
+            background-color: rgba(244, 234, 224, 0.5);
+        }
+
+        .day-number {
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+            text-align: center;
+        }
+
+        .day-events {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+            overflow-y: auto;
+            font-size: 0.7rem;
+            max-height: calc(100% - 1.5rem);
+            scrollbar-width: thin;
+        }
+
+        .day-events::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .day-events::-webkit-scrollbar-thumb {
+            background-color: var(--primary-light);
+            border-radius: 4px;
+        }
+
+        .day-event {
+            padding: 0.15rem 0.25rem;
+            border-radius: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: white;
+            font-weight: 500;
+        }
+
+        .day-event.work {
+            background-color: var(--warning);
+        }
+
+        .day-event.personal {
+            background-color: var(--success);
+        }
+
+        .event-list {
+            margin-top: 1.5rem;
+        }
+
+        .event-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .event-list-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .event-filters {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.25rem 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 0.25rem;
+            background-color: var(--background);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .event-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .event-item {
+            background-color: var(--surface);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            animation: slideUp 0.3s ease-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .event-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .event-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .event-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .event-type {
+            font-size: 0.8rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 1rem;
+            color: white;
+            font-weight: 500;
+        }
+
+        .event-type.work {
+            background-color: var(--warning);
+        }
+
+        .event-type.personal {
+            background-color: var(--success);
+        }
+
+        .event-datetime {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .event-description {
+            font-size: 0.9rem;
+            color: var(--text);
+            margin-top: 0.5rem;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        .event-action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+            padding: 0.25rem;
+        }
+
+        .event-action-btn:hover {
+            color: var(--primary);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: var(--background);
+            margin: 5% auto;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 500px;
+            animation: modalSlideDown 0.3s ease-out;
+            position: relative;
+        }
+
+        @keyframes modalSlideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+        }
+
+        .modal-body {
+            margin-bottom: 1rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 0.25rem;
+            font-family: 'Nunito', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary);
+            color: var(--background);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            animation: notificationSlideUp 0.3s ease-out;
+            max-width: 300px;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .notification-icon {
+            font-size: 1.2rem;
+            margin-top: 0.1rem;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-message {
+            font-size: 0.9rem;
+        }
+
+        .notification-close {
+            font-size: 1rem;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            transition: color 0.3s ease;
+        }
+
+        .notification-close:hover {
+            color: white;
+        }
+
+        @keyframes notificationSlideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .view-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .view-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            background-color: var(--background);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .view-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .upcoming-events {
+            background-color: var(--surface);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .upcoming-events-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .upcoming-events-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .upcoming-events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .upcoming-event {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background-color: var(--background);
+            transition: transform 0.3s ease;
+        }
+
+        .upcoming-event:hover {
+            transform: translateX(5px);
+        }
+
+        .upcoming-event-icon {
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .upcoming-event-info {
+            flex: 1;
+        }
+
+        .upcoming-event-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .upcoming-event-time {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .upcoming-event-countdown {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.15rem 0.5rem;
+            border-radius: 1rem;
+            background-color: var(--primary-light);
+            color: var(--text);
+        }
+
+        @media (max-width: 1024px) {
+            .calendar-day {
+                min-height: 70px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                top: 0;
+                height: 100%;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .calendar-day {
+                min-height: 60px;
+            }
+
+            .day-number {
+                font-size: 0.8rem;
+            }
+
+            .day-event {
+                font-size: 0.65rem;
+                padding: 0.1rem 0.2rem;
+            }
+
+            .event-items {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .calendar-weekday {
+                font-size: 0.7rem;
+            }
+
+            .calendar-day {
+                min-height: 50px;
+            }
+
+            .day-number {
+                font-size: 0.7rem;
+            }
+
+            .day-event {
+                font-size: 0.6rem;
+                padding: 0.05rem 0.15rem;
+            }
+
+            .event-filters {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Overlay para cuando el sidebar está activo en móvil */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 5;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de carga modular -->
+<div class="loader-container" id="pageLoader">
+    <div class="loader-content">
+        <div class="clock-loader">
+            <div class="clock-face">
+                <div class="clock-center"></div>
+                <div class="clock-hour"></div>
+                <div class="clock-minute"></div>
+                <div class="clock-second"></div>
+                <div class="clock-marking marking-12"></div>
+                <div class="clock-marking marking-3"></div>
+                <div class="clock-marking marking-6"></div>
+                <div class="clock-marking marking-9"></div>
+            </div>
+        </div>
+        <div class="loader-text">
+            <h2>Cargando...</h2>
+            <div class="quote-container">
+                <p id="quoteText" class="quote-text"></p>
+                <p id="quoteAuthor" class="quote-author"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-clock fa-2x" style="color: var(--primary);"></i>
+                <h1>TimeFlow</h1>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="tareas.html"><i class="fas fa-tasks"></i> Tareas</a></li>
+                    <li><a href="calendario.html"><i class="fas fa-calendar"></i> Calendario</a></li>
+                    <li><a href="tecnicas.html"><i class="fas fa-brain"></i> Técnicas</a></li>
+                    <li><a href="priorizacion-tareas.html"><i class="fas fa-sort-amount-up"></i> Priorización</a></li>
+                    <li><a href="analisis.html" class="active"><i class="fas fa-chart-line"></i> Análisis</a></li>
+                    <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="header">
+                <h2>Análisis de Productividad</h2>
+                <div class="header-controls">
+                    <select id="timeRange" class="btn">
+                        <option value="day">Hoy</option>
+                        <option value="week">Esta semana</option>
+                        <option value="month" selected>Este mes</option>
+                        <option value="quarter">Este trimestre</option>
+                        <option value="year">Este año</option>
+                    </select>
+                    <button id="exportDataBtn" class="btn">
+                        <i class="fas fa-download"></i> Exportar datos
+                    </button>
+                </div>
+            </header>
+
+            <div class="tabs">
+                <div class="tab active" data-tab="general">General</div>
+                <div class="tab" data-tab="goals">Objetivos y Metas</div>
+                <div class="tab" data-tab="techniques">Técnicas de Productividad</div>
+            </div>
+
+            <!-- Pestaña General -->
+            <div id="general-tab" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Tiempo Productivo</h3>
+                        <div class="value">6h 30m</div>
+                        <div class="progress-bar">
+                            <div class="progress-value" style="width: 75%;"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Tiempo Muerto</h3>
+                        <div class="value">2h 15m</div>
+                        <div class="progress-bar">
+                            <div class="progress-value" style="width: 25%;"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Índice de Procrastinación</h3>
+                        <div class="value">15%</div>
+                        <div class="progress-bar">
+                            <div class="progress-value" style="width: 15%;"></div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Eficiencia en Tareas</h3>
+                        <div class="value">85%</div>
+                        <div class="progress-bar">
+                            <div class="progress-value" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Distribución del Tiempo</h3>
+                        <div id="timeDistributionChart" class="chart-wrapper"></div>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Tendencia de Productividad</h3>
+                        <div id="productivityTrendChart" class="chart-wrapper"></div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Horas Productivas por Día de la Semana</h3>
+                    <div id="productiveHoursChart" class="chart-wrapper"></div>
+                </div>
+
+                <div class="recommendations">
+                    <h3>Recomendaciones de Mejora</h3>
+                    <div id="recommendationsList"></div>
+                </div>
+            </div>
+
+            <!-- Pestaña de Objetivos y Metas -->
+            <div id="goals-tab" class="tab-content">
+                <div class="chart-container">
+                    <h3>Progreso de Objetivos Mensuales</h3>
+                    <div id="monthlyGoalsChart" class="chart-wrapper"></div>
+                </div>
+
+                <h3>Objetivos del Mes</h3>
+                <div class="goals-grid" id="monthlyGoalsList">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Tendencia de Cumplimiento de Objetivos</h3>
+                        <div id="goalsCompletionTrendChart" class="chart-wrapper"></div>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Distribución de Objetivos por Categoría</h3>
+                        <div id="goalsCategoryChart" class="chart-wrapper"></div>
+                    </div>
+                </div>
+
+                <div class="recommendations">
+                    <h3>Recomendaciones para Mejorar el Cumplimiento de Objetivos</h3>
+                    <div id="goalsRecommendationsList"></div>
+                </div>
+            </div>
+
+            <!-- Pestaña de Técnicas de Productividad -->
+            <div id="techniques-tab" class="tab-content">
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Efectividad de Técnicas</h3>
+                        <div id="techniquesEffectivenessChart" class="chart-wrapper"></div>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Tiempo Dedicado por Técnica</h3>
+                        <div id="techniqueTimeChart" class="chart-wrapper"></div>
+                    </div>
+                </div>
+
+                <h3>Estadísticas por Técnica</h3>
+                <div class="technique-stats" id="techniqueStatsList">
+                    <!-- Se llenará dinámicamente -->
+                </div>
+
+                <div class="chart-container">
+                    <h3>Tasa de Finalización de Tareas por Técnica</h3>
+                    <div id="techniqueCompletionRateChart" class="chart-wrapper"></div>
+                </div>
+
+                <div class="recommendations">
+                    <h3>Recomendaciones para Optimizar el Uso de Técnicas</h3>
+                    <div id="techniquesRecommendationsList"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Datos de ejemplo
+        const productivityData = {
+            timeDistribution: [
+                { name: 'Trabajo Productivo', y: 45, color: '#A3C9A8' },
+                { name: 'Reuniones', y: 20, color: '#BFD7EA' },
+                { name: 'Descansos', y: 15, color: '#F5B7A5' },
+                { name: 'Procrastinación', y: 10, color: '#F4EAE0' },
+                { name: 'Tiempo Muerto', y: 10, color: '#6D8299' }
+            ],
+            productivityTrend: [
+                { day: 'Lun', value: 75 },
+                { day: 'Mar', value: 82 },
+                { day: 'Mié', value: 68 },
+                { day: 'Jue', value: 90 },
+                { day: 'Vie', value: 85 },
+                { day: 'Sáb', value: 60 },
+                { day: 'Dom', value: 70 }
+            ],
+            productiveHours: [
+                { name: 'Lunes', data: [3, 4, 5, 6, 7, 8] },
+                { name: 'Martes', data: [4, 5, 6, 7, 8, 9] },
+                { name: 'Miércoles', data: [2, 3, 4, 5, 6, 7] },
+                { name: 'Jueves', data: [5, 6, 7, 8, 9, 10] },
+                { name: 'Viernes', data: [4, 5, 6, 7, 8, 9] },
+                { name: 'Sábado', data: [2, 3, 4, 5, 6, 7] },
+                { name: 'Domingo', data: [1, 2, 3, 4, 5, 6] }
+            ]
+        };
+
+        const goalsData = {
+            monthlyGoals: [
+                { name: 'Completar proyecto web', progress: 75, category: 'Trabajo', dueDate: '2025-03-25' },
+                { name: 'Leer 3 libros', progress: 33, category: 'Personal', dueDate: '2025-03-31' },
+                { name: 'Ejercicio 3 veces por semana', progress: 80, category: 'Salud', dueDate: '2025-03-31' },
+                { name: 'Aprender nueva tecnología', progress: 60, category: 'Desarrollo', dueDate: '2025-03-28' },
+                { name: 'Organizar documentos', progress: 90, category: 'Administración', dueDate: '2025-03-15' },
+                { name: 'Planificar vacaciones', progress: 20, category: 'Personal', dueDate: '2025-04-10' }
+            ],
+            completionTrend: [
+                { month: 'Ene', value: 65 },
+                { month: 'Feb', value: 70 },
+                { month: 'Mar', value: 75 },
+                { month: 'Abr', value: 0 },
+                { month: 'May', value: 0 },
+                { month: 'Jun', value: 0 }
+            ],
+            categoryDistribution: [
+                { name: 'Trabajo', y: 35, color: '#4ECDC4' },
+                { name: 'Personal', y: 25, color: '#FF6B6B' },
+                { name: 'Salud', y: 15, color: '#A3C9A8' },
+                { name: 'Desarrollo', y: 15, color: '#BFD7EA' },
+                { name: 'Administración', y: 10, color: '#F5B7A5' }
+            ]
+        };
+
+        const techniquesData = {
+            effectiveness: [
+                { name: 'Pomodoro', y: 85, color: '#A3C9A8' },
+                { name: 'Flowtime', y: 75, color: '#4ECDC4' },
+                { name: 'Time Boxing', y: 90, color: '#FF6B6B' },
+                { name: 'GTD', y: 65, color: '#BFD7EA' },
+                { name: 'Kanban', y: 70, color: '#F5B7A5' }
+            ],
+            timeSpent: [
+                { name: 'Pomodoro', data: [12, 15, 18, 20, 22, 25, 28] },
+                { name: 'Flowtime', data: [8, 10, 12, 15, 18, 20, 22] },
+                { name: 'Time Boxing', data: [15, 18, 20, 22, 25, 28, 30] }
+            ],
+            techniques: [
+                {
+                    name: 'Pomodoro',
+                    icon: 'fa-clock',
+                    completed: 45,
+                    partial: 15,
+                    notStarted: 5,
+                    effectiveness: 85,
+                    totalTime: '25h 30m',
+                    avgSessionTime: '28m'
+                },
+                {
+                    name: 'Flowtime',
+                    icon: 'fa-hourglass-half',
+                    completed: 35,
+                    partial: 20,
+                    notStarted: 10,
+                    effectiveness: 75,
+                    totalTime: '18h 45m',
+                    avgSessionTime: '42m'
+                },
+                {
+                    name: 'Time Boxing',
+                    icon: 'fa-calendar-check',
+                    completed: 50,
+                    partial: 10,
+                    notStarted: 2,
+                    effectiveness: 90,
+                    totalTime: '30h 15m',
+                    avgSessionTime: '35m'
+                }
+            ],
+            completionRate: [
+                { name: 'Completadas', data: [45, 35, 50], color: '#A3C9A8' },
+                { name: 'Parciales', data: [15, 20, 10], color: '#F5B7A5' },
+                { name: 'No iniciadas', data: [5, 10, 2], color: '#FF6B6B' }
+            ]
+        };
+
+        // Inicializar gráficos con Highcharts
+        function initCharts() {
+            // Gráfico de distribución del tiempo
+            Highcharts.chart('timeDistributionChart', {
+                chart: {
+                    type: 'pie',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Tiempo',
+                    colorByPoint: true,
+                    data: productivityData.timeDistribution
+                }],
+                credits: {
+                    enabled: false
+                }
+            });
+
+            // Gráfico de tendencia de productividad
+            Highcharts.chart('productivityTrendChart', {
+                chart: {
+                    type: 'spline',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                xAxis: {
+                    categories: productivityData.productivityTrend.map(item => item.day)
+                },
+                yAxis: {
+                    title: {
+                        text: 'Productividad (%)'
+                    },
+                    min: 0,
+                    max: 100
+                },
+                tooltip: {
+                    valueSuffix: '%'
+                },
+                series: [{
+                    name: 'Productividad',
+                    data: productivityData.productivityTrend.map(item => item.value),
+                    color: '#A3C9A8'
+                }],
+                credits: {
+                    enabled: false
+                }
+            });
+
+            // Gráfico de horas productivas por día
+            Highcharts.chart('productiveHoursChart', {
+                chart: {
+                    type: 'column',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                xAxis: {
+                    categories: ['8-10 AM', '10-12 PM', '12-2 PM', '2-4 PM', '4-6 PM', '6-8 PM']
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Horas productivas'
+                    }
+                },
+                tooltip: {
+                    valueSuffix: ' horas'
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: productivityData.productiveHours,
+                credits: {
+                    enabled: false
+                }
+            });
+
+            // Gráfico de progreso de objetivos mensuales
+            Highcharts.chart('monthlyGoalsChart', {
+                chart: {
+                    type: 'gauge',
+                    plotBackgroundColor: null,
+                    plotBackgroundImage: null,
+                    plotBorderWidth: 0,
+                    plotShadow: false,
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                pane: {
+                    startAngle: -150,
+                    endAngle: 150,
+                    background: [{
+                        backgroundColor: '#EEE',
+                        borderWidth: 0,
+                        outerRadius: '109%'
+                    }]
+                },
+                yAxis: {
+                    min: 0,
+                    max: 100,
+                    minorTickInterval: 'auto',
+                    minorTickWidth: 1,
+                    minorTickLength: 10,
+                    minorTickPosition: 'inside',
+                    minorTickColor: '#666',
+                    tickPixelInterval: 30,
+                    tickWidth: 2,
+                    tickPosition: 'inside',
+                    tickLength: 10,
+                    tickColor: '#666',
+                    labels: {
+                        step: 2,
+                        rotation: 'auto'
+                    },
+                    title: {
+                        text: 'Progreso %'
+                    },
+                    plotBands: [{
+                        from: 0,
+                        to: 60,
+                        color: '#FF6B6B'
+                    }, {
+                        from: 60,
+                        to: 80,
+                        color: '#F5B7A5'
+                    }, {
+                        from: 80,
+                        to: 100,
+                        color: '#A3C9A8'
+                    }]
+                },
+                series: [{
+                    name: 'Progreso',
+                    data: [Math.round(goalsData.monthlyGoals.reduce((acc, goal) => acc + goal.progress, 0) / goalsData.monthlyGoals.length)],
+                    tooltip: {
+                        valueSuffix: ' %'
+                    }
+                }],
+                credits: {
+                    enabled: false
+                }
+            });
+
+            // Gráfico de tendencia de cumplimiento de objetivos
+            Highcharts.chart('goalsCompletionTrendChart', {
+                chart: {
+                    type: 'areaspline',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                xAxis: {
+                    categories: goalsData.completionTrend.map(item => item.month)
+                },
+                yAxis: {
+                    title: {
+                        text: 'Tasa de cumplimiento (%)'
+                    },
+                    min: 0,
+                    max: 100
+                },
+                tooltip: {
+                    valueSuffix: '%'
+                },
+                plotOptions: {
+                    areaspline: {
+                        fillOpacity: 0.5
+                    }
+                },
+                series: [{
+                    name: 'Cumplimiento',
+                    data: goalsData.completionTrend.map(item => item.value),
+                    color: '#4ECDC4',
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 0,
+                            x2: 0,
+                            y2: 1
+                        },
+                        stops: [
+                            [0, Highcharts.color('#4ECDC4').setOpacity(0.6).get('rgba')],
+                            [1, Highcharts.color('#4ECDC4').setOpacity(0.1).get('rgba')]
+                        ]
+                    }
+                }],
+                credits: {
+                    enabled: false
+                }
+            });
+
+            // Gráfico de distribución de objetivos por categoría
+            Highcharts.chart('goalsCategoryChart', {
+                chart: {
+                    type: 'pie',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Categoría',
+                    colorByPoint: true,
+                    data: goalsData.categoryDistribution
+                }],
+                credits: {
+                    enabled: false
+                }
+            });
+
+            // Gráfico de efectividad de técnicas
+            Highcharts.chart('techniquesEffectivenessChart', {
+                chart: {
+                    type: 'column',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                xAxis: {
+                    categories: techniquesData.effectiveness.map(item => item.name),
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    max: 100,
+                    title: {
+                        text: 'Efectividad (%)'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y:.1f}%</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'Efectividad',
+                    data: techniquesData.effectiveness.map(item => item.y),
+                    colorByPoint: true,
+                    colors: techniquesData.effectiveness.map(item => item.color)
+                }],
+                credits: {
+                    enabled: false
+                }
+            });
+
+            // Gráfico de tiempo dedicado por técnica
+            Highcharts.chart('techniqueTimeChart', {
+                chart: {
+                    type: 'line',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                xAxis: {
+                    categories: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
+                },
+                yAxis: {
+                    title: {
+                        text: 'Tiempo (horas)'
+                    }
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: true
+                        }
+                    }
+                },
+                series: techniquesData.timeSpent,
+                credits: {
+                    enabled: false
+                }
+            });
+
+            // Gráfico de tasa de finalización de tareas por técnica
+            Highcharts.chart('techniqueCompletionRateChart', {
+                chart: {
+                    type: 'bar',
+                    backgroundColor: 'transparent'
+                },
+                title: {
+                    text: null
+                },
+                xAxis: {
+                    categories: ['Pomodoro', 'Flowtime', 'Time Boxing']
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Número de tareas'
+                    }
+                },
+                legend: {
+                    reversed: true
+                },
+                plotOptions: {
+                    series: {
+                        stacking: 'normal'
+                    }
+                },
+                series: techniquesData.completionRate,
+                credits: {
+                    enabled: false
+                }
+            });
+        }
+
+        // Renderizar objetivos mensuales
+        function renderMonthlyGoals() {
+            const container = document.getElementById('monthlyGoalsList');
+            container.innerHTML = '';
+
+            goalsData.monthlyGoals.forEach(goal => {
+                const goalCard = document.createElement('div');
+                goalCard.className = 'goal-card';
+                
+                let progressColor = '#FF6B6B'; // Rojo para progreso bajo
+                if (goal.progress >= 80) {
+                    progressColor = '#A3C9A8'; // Verde para progreso alto
+                } else if (goal.progress >= 60) {
+                    progressColor = '#F5B7A5'; // Naranja para progreso medio
+                }
+
+                goalCard.innerHTML = `
+                    <h4>${goal.name}</h4>
+                    <small>Categoría: ${goal.category} | Vence: ${goal.dueDate}</small>
+                    <div class="progress-bar" style="margin-top: 0.5rem;">
+                        <div class="progress-value" style="width: ${goal.progress}%; background-color: ${progressColor};"></div>
+                    </div>
+                    <div class="progress-info">
+                        <span>Progreso</span>
+                        <span>${goal.progress}%</span>
+                    </div>
+                `;
+
+                container.appendChild(goalCard);
+            });
+        }
+
+        // Renderizar estadísticas de técnicas
+        function renderTechniqueStats() {
+            const container = document.getElementById('techniqueStatsList');
+            container.innerHTML = '';
+
+            techniquesData.techniques.forEach(technique => {
+                const techniqueCard = document.createElement('div');
+                techniqueCard.className = 'technique-card';
+                
+                techniqueCard.innerHTML = `
+                    <h4><i class="fas ${technique.icon}"></i> ${technique.name}</h4>
+                    <div class="progress-bar">
+                        <div class="progress-value" style="width: ${technique.effectiveness}%;"></div>
+                    </div>
+                    <div class="progress-info">
+                        <span>Efectividad</span>
+                        <span>${technique.effectiveness}%</span>
+                    </div>
+                    <div class="technique-stats-grid">
+                        <div class="technique-stat">
+                            <div class="value completed">${technique.completed}</div>
+                            <div class="label">Completadas</div>
+                        </div>
+                        <div class="technique-stat">
+                            <div class="value partial">${technique.partial}</div>
+                            <div class="label">Parciales</div>
+                        </div>
+                        <div class="technique-stat">
+                            <div class="value not-started">${technique.notStarted}</div>
+                            <div class="label">No iniciadas</div>
+                        </div>
+                        <div class="technique-stat">
+                            <div class="value">${technique.totalTime}</div>
+                            <div class="label">Tiempo total</div>
+                        </div>
+                        <div class="technique-stat">
+                            <div class="value">${technique.avgSessionTime}</div>
+                            <div class="label">Tiempo promedio</div>
+                        </div>
+                        <div class="technique-stat">
+                            <div class="value">${technique.completed + technique.partial + technique.notStarted}</div>
+                            <div class="label">Total tareas</div>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(techniqueCard);
+            });
+        }
+
+        // Generar recomendaciones generales
+        function generateGeneralRecommendations() {
+            const recommendations = [
+                {
+                    icon: 'fa-clock',
+                    title: 'Optimiza tus períodos de trabajo',
+                    description: 'Implementa la técnica Pomodoro: 25 minutos de trabajo enfocado seguidos de 5 minutos de descanso.'
+                },
+                {
+                    icon: 'fa-list-check',
+                    title: 'Priorización de tareas',
+                    description: 'Identifica las tareas más importantes al inicio del día y realízalas durante tus horas más productivas (10-12 AM y 4-6 PM según tus datos).'
+                },
+                {
+                    icon: 'fa-bell',
+                    title: 'Reduce las distracciones',
+                    description: 'Desactiva las notificaciones durante los períodos de trabajo enfocado y establece horarios específicos para revisar el correo.'
+                },
+                {
+                    icon: 'fa-chart-line',
+                    title: 'Mejora tu tiempo muerto',
+                    description: 'Convierte el tiempo muerto en productivo utilizando la regla de los 2 minutos para tareas pequeñas.'
+                }
+            ];
+
+            const recommendationsList = document.getElementById('recommendationsList');
+            recommendationsList.innerHTML = recommendations.map(rec => `
+                <div class="recommendation-item">
+                    <i class="fas ${rec.icon} recommendation-icon"></i>
+                    <div>
+                        <h4>${rec.title}</h4>
+                        <p>${rec.description}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Generar recomendaciones para objetivos
+        function generateGoalsRecommendations() {
+            const recommendations = [
+                {
+                    icon: 'fa-bullseye',
+                    title: 'Establece objetivos SMART',
+                    description: 'Asegúrate de que tus objetivos sean Específicos, Medibles, Alcanzables, Relevantes y con Tiempo definido.'
+                },
+                {
+                    icon: 'fa-calendar-check',
+                    title: 'Divide tus objetivos en tareas más pequeñas',
+                    description: 'Descompón tus objetivos en tareas más manejables y programa tiempo específico para trabajar en ellas.'
+                },
+                {
+                    icon: 'fa-chart-simple',
+                    title: 'Revisa tu progreso semanalmente',
+                    description: 'Dedica 15 minutos cada semana para revisar tu progreso y ajustar tu plan según sea necesario.'
+                },
+                {
+                    icon: 'fa-trophy',
+                    title: 'Celebra tus logros',
+                    description: 'Reconoce y celebra cuando alcances hitos importantes en tus objetivos para mantener la motivación.'
+                }
+            ];
+
+            const recommendationsList = document.getElementById('goalsRecommendationsList');
+            recommendationsList.innerHTML = recommendations.map(rec => `
+                <div class="recommendation-item">
+                    <i class="fas ${rec.icon} recommendation-icon"></i>
+                    <div>
+                        <h4>${rec.title}</h4>
+                        <p>${rec.description}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Generar recomendaciones para técnicas
+        function generateTechniquesRecommendations() {
+            const recommendations = [
+                {
+                    icon: 'fa-calendar-check',
+                    title: 'Optimiza tu uso de Time Boxing',
+                    description: 'Según tus datos, Time Boxing es tu técnica más efectiva (90%). Considera usarla para tareas que requieren alta concentración y tienen plazos definidos.'
+                },
+                {
+                    icon: 'fa-clock',
+                    title: 'Ajusta tus sesiones de Pomodoro',
+                    description: 'Tu tiempo promedio de sesión es de 28 minutos. Considera aumentar tus intervalos Pomodoro de 25 a 30 minutos para alinearse mejor con tu ritmo natural.'
+                },
+                {
+                    icon: 'fa-hourglass-half',
+                    title: 'Mejora tu técnica Flowtime',
+                    description: 'Tienes una alta tasa de tareas parcialmente completadas con Flowtime (20). Establece puntos de control para evaluar tu progreso durante las sesiones.'
+                },
+                {
+                    icon: 'fa-rotate',
+                    title: 'Alterna entre técnicas',
+                    description: 'Usa Pomodoro para tareas rutinarias, Flowtime para trabajo creativo y Time Boxing para proyectos con plazos estrictos.'
+                }
+            ];
+
+            const recommendationsList = document.getElementById('techniquesRecommendationsList');
+            recommendationsList.innerHTML = recommendations.map(rec => `
+                <div class="recommendation-item">
+                    <i class="fas ${rec.icon} recommendation-icon"></i>
+                    <div>
+                        <h4>${rec.title}</h4>
+                        <p>${rec.description}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Manejar cambios de pestaña
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // Actualizar pestañas activas
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Actualizar contenido visible
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === `${tabId}-tab`) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+        }
+
+        // Exportar datos
+        document.getElementById('exportDataBtn').addEventListener('click', function() {
+            alert('Datos exportados correctamente en formato CSV.');
+        });
+
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            renderMonthlyGoals();
+            renderTechniqueStats();
+            generateGeneralRecommendations();
+            generateGoalsRecommendations();
+            generateTechniquesRecommendations();
+            setupTabs();
+        });
+    </script>
+</body>
+</html>

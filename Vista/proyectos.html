@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyectos - TimeFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #A3C9A8;
+            --primary-light: #BFD7EA;
+            --secondary: #F5B7A5;
+            --accent: #F4EAE0;
+            --background: #FFFFFF;
+            --surface: #F4EAE0;
+            --text: #333333;
+            --text-light: #6D8299;
+            --border: #BFD7EA;
+            --success: #A3C9A8;
+            --warning: #F5B7A5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background-color: var(--surface);
+            padding: 1.5rem;
+            border-right: 1px solid var(--border);
+        }
+
+        .main-content {
+            padding: 2rem;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+        }
+
+        .project-selector {
+            margin-bottom: 2rem;
+        }
+
+        .project-selector select {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.25rem;
+            background-color: var(--background);
+            color: var(--text);
+        }
+
+        .project-info {
+            background-color: var(--surface);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .project-info h2 {
+            margin-bottom: 1rem;
+        }
+
+        .project-dates {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .project-dates div {
+            background-color: var(--primary-light);
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+        }
+
+        .document-list {
+            list-style-type: none;
+        }
+
+        .document-list li {
+            background-color: var(--background);
+            margin-bottom: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .document-list li button {
+            background-color: var(--primary);
+            color: var(--background);
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .document-list li button:hover {
+            background-color: var(--primary-light);
+        }
+
+        .task-list {
+            list-style-type: none;
+        }
+
+        .task-list li {
+            background-color: var(--background);
+            margin-bottom: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-list li label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .task-list li input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-clock fa-2x" style="color: var(--primary);"></i>
+                <h1>TimeFlow</h1>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="tareas.html"><i class="fas fa-tasks"></i> Tareas</a></li>
+                    <li><a href="calendario.html"><i class="fas fa-calendar"></i> Calendario</a></li>
+                    <li><a href="gantt.html"><i class="fas fa-project-diagram"></i> Gantt</a></li>
+                    <li><a href="tecnicas.html"><i class="fas fa-brain"></i> Técnicas</a></li>
+                    <li><a href="proyectos.html" class="active"><i class="fas fa-folder-open"></i> Proyectos</a></li>
+                    <li><a href="analisis.html"><i class="fas fa-chart-line"></i> Análisis</a></li>
+                    <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h1>Gestión de Proyectos</h1>
+            <div class="project-selector">
+                <select id="projectSelect">
+                    <option value="">Selecciona un proyecto</option>
+                    <option value="infomatrix">INFOMATRIX</option>
+                    <!-- Agregar más opciones de proyectos aquí -->
+                </select>
+            </div>
+
+            <div id="projectInfo" class="project-info" style="display: none;">
+                <!-- La información del proyecto se cargará aquí dinámicamente -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const projectData = {
+            infomatrix: {
+                name: "INFOMATRIX",
+                description: "Concurso Internacional de Proyectos de Cómputo",
+                website: "https://infomatrix.lat/",
+                startDate: "2025-01-15",
+                endDate: "2025-05-30",
+                documents: [
+                    "Formulario de inscripción",
+                    "Resumen del proyecto",
+                    "Documento técnico",
+                    "Poster científico",
+                    "Video de presentación"
+                ],
+                tasks: [
+                    "Definir idea del proyecto",
+                    "Investigar antecedentes",
+                    "Desarrollar prototipo",
+                    "Escribir documento técnico",
+                    "Diseñar poster científico",
+                    "Grabar video de presentación",
+                    "Revisar y finalizar todos los documentos",
+                    "Enviar inscripción"
+                ]
+            }
+            // Agregar más proyectos aquí
+        };
+
+        document.getElementById('projectSelect').addEventListener('change', function() {
+            const selectedProject = this.value;
+            const projectInfoDiv = document.getElementById('projectInfo');
+
+            if (selectedProject && projectData[selectedProject]) {
+                const project = projectData[selectedProject];
+                
+                let html = `
+                    <h2 class="fade-in">${project.name}</h2>
+                    <p class="fade-in">${project.description}</p>
+                    <p class="fade-in">Sitio web: <a href="${project.website}" target="_blank">${project.website}</a></p>
+                    <div class="project-dates fade-in">
+                        <div>Fecha de inicio: ${project.startDate}</div>
+                        <div>Fecha de cierre: ${project.endDate}</div>
+                    </div>
+                    <h3 class="fade-in">Documentos requeridos:</h3>
+                    <ul class="document-list fade-in">
+                        ${project.documents.map(doc => `
+                            <li>
+                                ${doc}
+                                <button onclick="alert('Subir documento: ${doc}')">Subir</button>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    <h3 class="fade-in">Tareas del proyecto:</h3>
+                    <ul class="task-list fade-in">
+                        ${project.tasks.map(task => `
+                            <li>
+                                <label>
+                                    <input type="checkbox" onchange="updateTask(this)">
+                                    ${task}
+                                </label>
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+
+                projectInfoDiv.innerHTML = html;
+                projectInfoDiv.style.display = 'block';
+
+                // Agregar eventos al calendario
+                addToCalendar(project.name, project.startDate, "Inicio de " + project.name);
+                addToCalendar(project.name, project.endDate, "Cierre de " + project.name);
+            } else {
+                projectInfoDiv.style.display = 'none';
+            }
+        });
+
+        function addToCalendar(projectName, date, description) {
+            // Aquí iría la lógica para agregar eventos al calendario
+            console.log(`Evento agregado al calendario: ${description} - ${date}`);
+        }
+
+        function updateTask(checkbox) {
+            const taskName = checkbox.parentElement.textContent.trim();
+            if (checkbox.checked) {
+                console.log(`Tarea completada: ${taskName}`);
+                // Aquí iría la lógica para marcar la tarea como completada en el sistema
+            } else {
+                console.log(`Tarea desmarcada: ${taskName}`);
+                // Aquí iría la lógica para desmarcar la tarea en el sistema
+            }
+        }
+    </script>
+</body>
+</html>
+
