@@ -19,7 +19,51 @@
 
 
     <style>
-   
+   /* Estilos para la sección de usuario */
+.user-section {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: rgba(163, 201, 168, 0.1);
+    border-radius: 0.5rem;
+}
+
+.user-greeting {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 0.25rem;
+}
+
+.user-name {
+    font-size: 1rem;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+}
+
+.user-plan {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+/* Estilos para el botón de logout */
+.logout-btn {
+    width: 100%;
+    margin-top: 1rem;
+    background-color: var(--danger);
+    justify-content: center;
+}
+
+.logout-btn:hover {
+    background-color: var(--warning);
+}
+
+/* Ajustar el sidebar para que el botón quede al fondo */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
     </style>
 </head>
 <body>
@@ -47,26 +91,38 @@
         </div>
     </div>
 </div>
-    <div class="dashboard">
-        <aside class="sidebar">
-            <div class="logo">
-                <i class="fas fa-clock fa-2x" style="color: var(--primary);"></i>
-                <h1>TimeFlow</h1>
-            </div>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="dashboard.html" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
-                    <li><a href="tareas.html"><i class="fas fa-tasks"></i> Tareas</a></li>
-                    <li><a href="calendario.html"><i class="fas fa-calendar"></i> Calendario</a></li>
-                    <li><a href="gantt.html"><i class="fas fa-project-diagram"></i> Gantt</a></li>
-                    <li><a href="tecnicas.html"><i class="fas fa-brain"></i> Técnicas</a></li>
-                    <li><a href="proyectos.html"><i class="fas fa-folder-open"></i> Proyectos</a></li>
-                    <li><a href="priorizacion-tareas.html"><i class="fas fa-sort-amount-up"></i> Priorización</a></li>
-                    <li><a href="analisis.html"><i class="fas fa-chart-line"></i> Análisis</a></li>
-                    <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
-                </ul>
-            </nav>
-        </aside>
+
+<div class="dashboard">
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fas fa-clock fa-2x" style="color: var(--primary);"></i>
+            <h1>TimeFlow</h1>
+        </div>
+    
+    <!-- Sección de usuario -->
+    <div class="user-section">
+        <div class="user-greeting" id="userGreeting"></div>
+        <div class="user-name" id="userName">Nombre de Usuario</div>
+        <div class="user-plan" id="userPlan">Plan: Free</div>
+    </div>
+
+    <nav>
+        <ul class="nav-links">
+            <li><a href="dashboard.html" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="tareas.html"><i class="fas fa-tasks"></i> Tareas</a></li>
+            <li><a href="calendario.html"><i class="fas fa-calendar"></i> Calendario</a></li>
+            <li><a href="tecnicas.html"><i class="fas fa-brain"></i> Técnicas</a></li>
+            <li><a href="diagrama.html"><i class="fas fa-sort-amount-up"></i> Priorización</a></li>
+            <li><a href="analisis.html"><i class="fas fa-chart-line"></i> Análisis</a></li>
+            <li><a href="configuracion.html"><i class="fas fa-cog"></i> Configuración</a></li>
+        </ul>
+    </nav>
+
+    <!-- Botón de cerrar sesión -->
+    <button class="logout-btn btn" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+    </button>
+</aside>
 
         <main class="main-content">
             <h1 class="slide-in">Dashboard</h1>
@@ -101,6 +157,6 @@
     </script>
         <script src="../includes/js/dashboard.js"></script>
         <script src="../includes/js/carga.js"></script>
-
+        <script src="../includes/js/diseño.js"></script>
 </body>
 </html>

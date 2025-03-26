@@ -1,111 +1,85 @@
-/**
- * TimeFlow - Dashboard JavaScript
- */
+// Dashboard.js - Funcionalidad principal del dashboard
 
+// Declarar Highcharts como variable global si no está ya definida
+if (typeof Highcharts === "undefined") {
+  var Highcharts = window.Highcharts
+}
+
+// Esperar a que el DOM esté completamente cargado
 document.addEventListener("DOMContentLoaded", () => {
-  // Inicializar componentes
-  initSidebar()
-  initThemeToggle()
-  initDropdowns()
-  initCharts()
-  initTaskModal()
+  // Inicializar componentes después de que la pantalla de carga desaparezca
+  setTimeout(initializeDashboard, 1500)
 
-  // Animaciones de entrada
-  animateElements()
+  // Agregar eventos a los botones de acción
+  document.querySelectorAll(".card-action-btn").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      if (this.title === "Actualizar") {
+        const card = this.closest(".dashboard-card")
+        simulateDataRefresh(card)
+      }
+    })
+  })
 })
 
-/**
- * Inicializar la funcionalidad del sidebar
- */
-function initSidebar() {
-  const dashboard = document.getElementById("dashboard")
-  const sidebar = document.getElementById("sidebar")
-  const sidebarToggle = document.getElementById("sidebarToggle")
-  const mobileSidebarToggle = document.getElementById("mobileSidebarToggle")
+// Inicializar el dashboard
+function initializeDashboard() {
+  // Actualizar datos de KPIs con animación
+  animateCounter("completedTasks", 0, 27, 1500)
+  animateCounter("pendingTasks", 0, 8, 1500)
+  animateCounter("productivity", 0, 78, 1500, "%")
+  animateCounter("focusedTime", 0, 32, 1500, "h")
 
-  // Toggle del sidebar en escritorio
-  if (sidebarToggle) {
-    sidebarToggle.addEventListener("click", () => {
-      dashboard.classList.toggle("sidebar-collapsed")
-    })
-  }
+  // Inicializar gráficos
+  initializeCharts()
 
-  // Toggle del sidebar en móvil
-  if (mobileSidebarToggle) {
-    mobileSidebarToggle.addEventListener("click", () => {
-      sidebar.classList.toggle("show")
-    })
-  }
+  // Cargar datos de tareas y actividades
+  loadRecentTasks()
+  loadRecentActivity()
+  loadUpcomingEvents()
 
-  // Cerrar sidebar en móvil al hacer clic fuera
-  document.addEventListener("click", (event) => {
-    const isClickInsideSidebar = sidebar.contains(event.target)
-    const isClickOnToggle = mobileSidebarToggle.contains(event.target)
-
-    if (!isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains("show")) {
-      sidebar.classList.remove("show")
-    }
-  })
+  // Inicializar eventos de interacción
+  initializeInteractions()
 }
 
-/**
- * Inicializar el toggle de tema claro/oscuro
- */
-function initThemeToggle() {
-  const themeToggle = document.getElementById("themeToggle")
-  const htmlElement = document.documentElement
+// Animar contadores para los KPIs
+function animateCounter(elementId, start, end, duration, suffix = "") {
+  const element = document.getElementById(elementId)
+  if (!element) return
 
-  // Verificar si hay un tema guardado en localStorage
-  const savedTheme = localStorage.getItem("theme")
-  if (savedTheme) {
-    htmlElement.setAttribute("data-theme", savedTheme)
-    updateThemeIcon(savedTheme)
-  }
+  let startTime = null
 
-  if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-      const currentTheme = htmlElement.getAttribute("data-theme")
-      const newTheme = currentTheme === "dark" ? "light" : "dark"
+  function animation(currentTime) {
+    if (!startTime) startTime = currentTime
+    const timeElapsed = currentTime - startTime
+    const progress = Math.min(timeElapsed / duration, 1)
+    const value = Math.floor(progress * (end - start) + start)
 
-      htmlElement.setAttribute("data-theme", newTheme)
-      localStorage.setItem("theme", newTheme)
+    element.textContent = value + suffix
 
-      updateThemeIcon(newTheme)
-    })
-  }
-
-  function updateThemeIcon(theme) {
-    if (!themeToggle) return
-
-    const icon = themeToggle.querySelector("i")
-    if (theme === "dark") {
-      icon.className = "fas fa-sun"
-    } else {
-      icon.className = "fas fa-moon"
+    if (progress < 1) {
+      requestAnimationFrame(animation)
     }
   }
+
+  requestAnimationFrame(animation)
 }
 
-/**
- * Inicializar los dropdowns
- */
-function initDropdowns() {
-  // Implementación de dropdowns si es necesario
-  // Esta función puede expandirse según las necesidades
-}
+// Inicializar gráficos
+function initializeCharts() {
+  // Configuración global para quitar la marca de agua de Highcharts
+  if (Highcharts) {
+    Highcharts.setOptions({
+      credits: {
+        enabled: false, // Esto elimina la marca de agua de Highcharts
+      },
+    })
+  }
 
-/**
- * Inicializar los gráficos con Highcharts
- */
-function initCharts() {
   // Gráfico de progreso de tareas
   Highcharts.chart("taskProgressChart", {
     chart: {
       type: "column",
       backgroundColor: "transparent",
-      style: {
-        fontFamily: "Nunito, sans-serif",
-      },
     },
     title: {
       text: null,
@@ -139,24 +113,21 @@ function initCharts() {
       {
         name: "Completadas",
         color: "#A3C9A8",
-        data: [3, 5, 4, 7, 6, 2, 1],
+        data: [5, 7, 3, 6, 4, 2, 0],
       },
       {
         name: "Pendientes",
         color: "#F5B7A5",
-        data: [2, 3, 5, 1, 2, 1, 0],
+        data: [2, 1, 3, 2, 0, 0, 0],
       },
     ],
   })
 
-  // Gráfico de distribución de tiempo
-  Highcharts.chart("timeDistributionChart", {
+  // Gráfico de distribución de tareas por categoría
+  Highcharts.chart("taskDistributionChart", {
     chart: {
       type: "pie",
       backgroundColor: "transparent",
-      style: {
-        fontFamily: "Nunito, sans-serif",
-      },
     },
     title: {
       text: null,
@@ -181,210 +152,272 @@ function initCharts() {
     },
     series: [
       {
-        name: "Tiempo",
+        name: "Categorías",
         colorByPoint: true,
         data: [
           {
-            name: "Desarrollo",
-            y: 35,
+            name: "Trabajo",
+            y: 45,
             color: "#A3C9A8",
           },
           {
-            name: "Reuniones",
-            y: 20,
+            name: "Estudios",
+            y: 25,
             color: "#BFD7EA",
           },
           {
-            name: "Planificación",
-            y: 15,
-            color: "#F5B7A5",
-          },
-          {
-            name: "Investigación",
+            name: "Personal",
             y: 20,
-            color: "#F4EAE0",
+            color: "#F5B7A5",
           },
           {
             name: "Otros",
             y: 10,
-            color: "#6D8299",
+            color: "#F4EAE0",
           },
         ],
       },
     ],
   })
-
-  // Gráfico de tendencia de productividad
-  Highcharts.chart("productivityTrendChart", {
-    chart: {
-      type: "spline",
-      backgroundColor: "transparent",
-      style: {
-        fontFamily: "Nunito, sans-serif",
-      },
-    },
-    title: {
-      text: null,
-    },
-    xAxis: {
-      categories: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
-    },
-    yAxis: {
-      title: {
-        text: "Productividad (%)",
-      },
-      min: 0,
-      max: 100,
-    },
-    tooltip: {
-      crosshairs: true,
-      shared: true,
-    },
-    plotOptions: {
-      spline: {
-        marker: {
-          radius: 4,
-          lineColor: "#666666",
-          lineWidth: 1,
-        },
-      },
-    },
-    series: [
-      {
-        name: "Esta semana",
-        color: "#A3C9A8",
-        marker: {
-          symbol: "circle",
-        },
-        data: [65, 70, 75, 85, 80, 75, 78],
-      },
-      {
-        name: "Semana anterior",
-        color: "#BFD7EA",
-        marker: {
-          symbol: "diamond",
-        },
-        data: [60, 65, 70, 75, 70, 65, 70],
-      },
-    ],
-  })
 }
 
-/**
- * Inicializar el modal de tareas
- */
-function initTaskModal() {
-  const addTaskBtn = document.querySelector(".add-task-btn")
-  const taskModal = document.getElementById("taskModal")
-  const closeModal = document.querySelector(".close-modal")
-  const cancelTask = document.getElementById("cancelTask")
-  const saveTask = document.getElementById("saveTask")
+// Cargar tareas recientes
+function loadRecentTasks() {
+  const taskList = document.getElementById("recentTasksList")
+  if (!taskList) return
 
-  if (addTaskBtn && taskModal) {
-    addTaskBtn.addEventListener("click", () => {
-      taskModal.classList.add("show")
-    })
-  }
+  const tasks = [
+    {
+      name: "Preparar informe semanal",
+      date: "Hoy, 14:30",
+      status: "pending",
+      priority: "high",
+    },
+    {
+      name: "Reunión con el equipo",
+      date: "Hoy, 10:00",
+      status: "completed",
+      priority: "medium",
+    },
+    {
+      name: "Revisar propuesta de diseño",
+      date: "Ayer, 16:45",
+      status: "in-progress",
+      priority: "medium",
+    },
+    {
+      name: "Actualizar documentación",
+      date: "Ayer, 11:20",
+      status: "pending",
+      priority: "low",
+    },
+  ]
 
-  if (closeModal) {
-    closeModal.addEventListener("click", () => {
-      taskModal.classList.remove("show")
-    })
-  }
-
-  if (cancelTask) {
-    cancelTask.addEventListener("click", () => {
-      taskModal.classList.remove("show")
-    })
-  }
-
-  if (saveTask) {
-    saveTask.addEventListener("click", () => {
-      // Aquí iría la lógica para guardar la tarea
-      // Por ahora solo cerramos el modal
-      taskModal.classList.remove("show")
-
-      // Mostrar notificación de éxito
-      showNotification("Tarea guardada correctamente", "success")
-    })
-  }
-
-  // Cerrar modal al hacer clic fuera
-  window.addEventListener("click", (event) => {
-    if (event.target === taskModal) {
-      taskModal.classList.remove("show")
-    }
-  })
-}
-
-/**
- * Mostrar notificación
- */
-function showNotification(message, type = "info") {
-  // Crear elemento de notificación
-  const notification = document.createElement("div")
-  notification.className = `notification ${type}`
-  notification.innerHTML = `
-        <div class="notification-content">
-            <i class="fas ${type === "success" ? "fa-check-circle" : "fa-info-circle"}"></i>
-            <span>${message}</span>
-        </div>
-        <button class="notification-close">
-            <i class="fas fa-times"></i>
-        </button>
+  taskList.innerHTML = ""
+  tasks.forEach((task) => {
+    const taskItem = document.createElement("div")
+    taskItem.className = "task-item"
+    taskItem.innerHTML = `
+      <div class="task-status ${task.status}"></div>
+      <div class="task-content">
+        <h4>${task.name}</h4>
+        <p>${task.date}</p>
+      </div>
+      <div class="task-priority ${task.priority}">${task.priority}</div>
     `
+    taskList.appendChild(taskItem)
+  })
+}
 
-  // Añadir al DOM
+// Cargar actividad reciente
+function loadRecentActivity() {
+  const activityList = document.getElementById("recentActivityList")
+  if (!activityList) return
+
+  const activities = [
+    {
+      type: "completed",
+      name: "Completaste una tarea",
+      description: "Diseñar wireframes para la app",
+      time: "Hace 2 horas",
+    },
+    {
+      type: "added",
+      name: "Agregaste una nueva tarea",
+      description: "Preparar informe semanal",
+      time: "Hace 3 horas",
+    },
+    {
+      type: "session",
+      name: "Sesión de Pomodoro",
+      description: "4 ciclos completados",
+      time: "Hace 5 horas",
+    },
+    {
+      type: "added",
+      name: "Agregaste un evento",
+      description: "Reunión de planificación",
+      time: "Ayer",
+    },
+  ]
+
+  activityList.innerHTML = ""
+  activities.forEach((activity) => {
+    const activityItem = document.createElement("div")
+    activityItem.className = "activity-item"
+    activityItem.innerHTML = `
+      <div class="activity-icon ${activity.type}">
+        <i class="fas ${getActivityIcon(activity.type)}"></i>
+      </div>
+      <div class="activity-content">
+        <h4>${activity.name}</h4>
+        <p>${activity.description}</p>
+        <p>${activity.time}</p>
+      </div>
+    `
+    activityList.appendChild(activityItem)
+  })
+}
+
+// Obtener icono según el tipo de actividad
+function getActivityIcon(type) {
+  switch (type) {
+    case "completed":
+      return "fa-check"
+    case "added":
+      return "fa-plus"
+    case "session":
+      return "fa-clock"
+    default:
+      return "fa-circle"
+  }
+}
+
+// Cargar próximos eventos
+function loadUpcomingEvents() {
+  const eventsList = document.getElementById("upcomingEventsList")
+  if (!eventsList) return
+
+  const events = [
+    {
+      title: "Reunión de equipo",
+      time: "Hoy, 15:00",
+      countdown: "En 2 horas",
+      icon: "fa-users",
+    },
+    {
+      title: "Entrega de proyecto",
+      time: "Mañana, 10:00",
+      countdown: "En 1 día",
+      icon: "fa-briefcase",
+    },
+    {
+      title: "Revisión de sprint",
+      time: "Viernes, 14:30",
+      countdown: "En 3 días",
+      icon: "fa-tasks",
+    },
+  ]
+
+  eventsList.innerHTML = ""
+  events.forEach((event) => {
+    const eventItem = document.createElement("div")
+    eventItem.className = "upcoming-event"
+    eventItem.innerHTML = `
+      <div class="upcoming-event-icon">
+        <i class="fas ${event.icon}"></i>
+      </div>
+      <div class="upcoming-event-info">
+        <div class="upcoming-event-title">${event.title}</div>
+        <div class="upcoming-event-time">${event.time}</div>
+      </div>
+      <div class="upcoming-event-countdown">${event.countdown}</div>
+    `
+    eventsList.appendChild(eventItem)
+  })
+}
+
+// Inicializar interacciones y eventos
+function initializeInteractions() {
+  // Hacer que las tarjetas de tareas sean interactivas
+  document.querySelectorAll(".task-item").forEach((item) => {
+    item.addEventListener("click", () => {
+      // Simular navegación a la página de detalles de la tarea
+      showNotification("Abriendo detalles de la tarea...")
+    })
+  })
+
+  // Hacer que los botones de acción rápida tengan efecto de hover
+  document.querySelectorAll(".action-button").forEach((btn) => {
+    btn.addEventListener("mouseenter", function () {
+      this.style.transform = "translateY(-5px)"
+    })
+
+    btn.addEventListener("mouseleave", function () {
+      this.style.transform = ""
+    })
+  })
+}
+
+// Simular actualización de datos
+function simulateDataRefresh(card) {
+  // Mostrar efecto de carga
+  const chartContainer = card.querySelector(".chart-container")
+  if (chartContainer) {
+    chartContainer.innerHTML = '<div class="loading-indicator"><i class="fas fa-spinner fa-spin"></i></div>'
+
+    // Simular tiempo de carga
+    setTimeout(() => {
+      // Restaurar el gráfico (en una aplicación real, se actualizarían los datos)
+      showNotification("Datos actualizados correctamente")
+      initializeCharts() // Reinicializar los gráficos
+    }, 1500)
+  }
+}
+
+// Mostrar notificación
+function showNotification(message) {
+  const notification = document.createElement("div")
+  notification.className = "notification"
+  notification.innerHTML = `
+    <div class="notification-content">
+      <i class="fas fa-info-circle"></i>
+      <span>${message}</span>
+    </div>
+  `
+
   document.body.appendChild(notification)
 
-  // Mostrar con animación
+  // Estilo de la notificación
+  Object.assign(notification.style, {
+    position: "fixed",
+    bottom: "20px",
+    right: "20px",
+    backgroundColor: "var(--primary)",
+    color: "white",
+    padding: "12px 20px",
+    borderRadius: "8px",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+    zIndex: "9999",
+    opacity: "0",
+    transform: "translateY(20px)",
+    transition: "opacity 0.3s, transform 0.3s",
+  })
+
+  // Animar entrada
   setTimeout(() => {
-    notification.classList.add("show")
+    notification.style.opacity = "1"
+    notification.style.transform = "translateY(0)"
   }, 10)
 
-  // Configurar cierre automático
+  // Eliminar después de 3 segundos
   setTimeout(() => {
-    notification.classList.remove("show")
+    notification.style.opacity = "0"
+    notification.style.transform = "translateY(20px)"
+
     setTimeout(() => {
-      notification.remove()
+      document.body.removeChild(notification)
     }, 300)
-  }, 5000)
-
-  // Configurar cierre manual
-  const closeBtn = notification.querySelector(".notification-close")
-  if (closeBtn) {
-    closeBtn.addEventListener("click", () => {
-      notification.classList.remove("show")
-      setTimeout(() => {
-        notification.remove()
-      }, 300)
-    })
-  }
-}
-
-/**
- * Animar elementos al cargar la página
- */
-function animateElements() {
-  const elements = document.querySelectorAll(".kpi-card, .chart-card, .widget-card")
-
-  elements.forEach((element, index) => {
-    element.classList.add("fade-in")
-    element.style.animationDelay = `${index * 0.1}s`
-  })
-}
-
-/**
- * Actualizar valores de KPI con datos reales
- * Esta función se llamaría después de obtener datos del servidor
- */
-function updateKPIs(data) {
-  // Esta es una función de ejemplo que se implementaría
-  // cuando se integre con el backend
-  // Ejemplo:
-  // document.getElementById('completedTasks').textContent = data.completedTasks;
-  // document.getElementById('pendingTasks').textContent = data.pendingTasks;
-  // document.getElementById('productivity').textContent = data.productivity + '%';
-  // document.getElementById('focusTime').textContent = data.focusTime + 'h';
+  }, 3000)
 }
 
