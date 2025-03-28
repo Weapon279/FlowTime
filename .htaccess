@@ -1,0 +1,83 @@
+# Activar el motor de reescritura
+RewriteEngine On
+
+# Establecer directorio base
+RewriteBase /timeflow/
+
+# Proteger archivos y directorios
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Denegar acceso a directorios sensibles
+RewriteRule ^(config|includes|models|controllers|vendor|logs|cache)/ - [F,L]
+
+# Denegar acceso a archivos sensibles
+<FilesMatch "\.(sql|log|ini|env|json|lock|gitignore)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Redirigir todas las solicitudes a index.php excepto archivos y directorios existentes
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?ruta=$1 [QSA,L]
+
+# Comprimir archivos para mejorar rendimiento
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json
+</IfModule>
+
+# Establecer caché para archivos estáticos
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType application/x-javascript "access plus 1 month"
+    ExpiresByType application/json "access plus 1 day"
+    ExpiresByType application/pdf "access plus 1 month"
+    ExpiresByType application/x-shockwave-flash "access plus 1 month"
+</IfModule>
+
+# Establecer cabeceras de seguridad
+<IfModule mod_headers.c>
+    # Protección contra XSS
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # Prevenir MIME-sniffing
+    Header set X-Content-Type-Options "nosniff"
+    
+    # Política de seguridad de contenido (CSP)
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://code.highcharts.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self'"
+    
+    # Política de referencia
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Política de enmarcado (evitar clickjacking)
+    Header set X-Frame-Options "SAMEORIGIN"
+    
+    # Desactivar caché para archivos PHP
+    <FilesMatch "\.(php)$">
+        Header set Cache-Control "private, no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+</IfModule>
+
+# Prevenir acceso a directorios sin index
+Options -Indexes
+
+# Establecer página de error personalizada
+ErrorDocument 400 /timeflow/error.php?codigo=400
+ErrorDocument 401 /timeflow/error.php?codigo=401
+ErrorDocument 403 /timeflow/error.php?codigo=403
+ErrorDocument 404 /timeflow/error.php?codigo=404
+ErrorDocument 500 /timeflow/error.php?codigo=500
